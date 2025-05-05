@@ -52,7 +52,7 @@ const getDealsHtml = (products, settings) => {
 
   return `
     <div style="display: flex; flex-wrap: wrap; gap: 1rem; font-family: sans-serif; justify-content: space-between;">
-      ${products.map(product => `
+      ${productRows.map(product => `
         <div style="
           flex-basis: calc(25% - 1rem);
           margin-bottom: 1rem;
