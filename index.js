@@ -32,27 +32,10 @@ const formatDate = (dateStr) => {
   });
 };
 
-const getDealsHtml = (products, settings) => {
-  const { affiliateTag, product1, product2, product3 } = settings
-
-  // Filter products based on product1, product2, product3 if defined
-  let filteredProducts = [];
-  if (product1 || product2 || product3) {
-    const idsToMatch = [product1, product2, product3].filter(Boolean);
-    filteredProducts = products.filter((p) => idsToMatch.includes(p.productId));
-  } else {
-    filteredProducts = products.slice(0, 20);
-  }
-
-  const productRows = [];
-  for (let i = 0; i < filteredProducts.length; i += 4) {
-    productRows.push(...filteredProducts.slice(i, i + 4));
-  }
-
+const getDealsHtml = (products, affiliateTag) => {
   return `
-  
     <div style="display: flex; flex-wrap: wrap; gap: 1rem; font-family: sans-serif; justify-content: space-between;">
-      ${productRows.map(product => `
+      ${products.map(product => `
         <div style="
           flex-basis: calc(25% - 1rem);
           margin-bottom: 1rem;
@@ -131,44 +114,21 @@ const getDealsHtml = (products, settings) => {
   `;
 };
 
-// app.post('/posts/html', async (request, response) => {
-//   const settings = request.body.settings;
 
-//   logger.info(`Received request to getDeals`);
+app.post('/posts/html', async (request, response) => {
+  const settings = request.body.settings;
 
-//   const products = await getDeals(settings);
+  logger.info(`Received request to getDeals`);
 
-//   const html = getDealsHtml(products, settings); // Show first 6 products
+  const products = await getDeals(settings);
 
-//   response.setHeader('Content-Type', 'application/json');
-//   response.json({
-//     code: 200,
-//     html
-//   });
-// });
+  const html = getDealsHtml(products, settings); // Show first 6 products
 
-app.post('/posts/html', (request, response) => {
-  // Access the settings the user selected in Kit's sidebar with:
-  const settings = request.body.settings
-
-  // Return HTML for your element in the following shape:
   response.json({
     code: 200,
-    html: `
-    <div style="
-      padding: 1rem;
-      border-radius: 0.5rem;
-      border: 1px solid red;
-      color: blue;
-      font-size: 20px;
-    ">
-      <h1>${settings.title}</h1>
-      <p>${settings.description}</p>
-      The user selected the post with ID 123!
-    </div>
-  `,
-  })
-})
+    html
+  });
+});
 
 
 app.listen(port, () => {
