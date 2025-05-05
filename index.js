@@ -34,97 +34,84 @@ const formatDate = (dateStr) => {
 
 const getDealsHtml = (products, settings) => {
 
-  const { affiliateTag, product1, product2, product3 } = settings
+  const {
+    titleLine1 = 'Our Favorite Mommy and Me',
+    titleLine2 = "Matching PJs to Celebrate Mother's Day",
+    titleFontSize = '18px',
+    titleFontColor = '#6366f1',
+    titleFontStyle = 'italic',
+    titleBackgroundColor = '#c2c2f7',
+    productTitleColor = '#6366f1',
+    productTitleSize = '14px',
+    buttonBackground = '#6366f1',
+    buttonStyle = 'outline',
+    buttonTextColor = buttonStyle === 'outline' ? buttonBackground : '#ffffff',
+    buttonBorder = buttonStyle === 'outline' ? `1px solid ${buttonBackground}` : 'none',
+  } = settings;
 
-  // Filter products based on product1, product2, product3 if defined
-  let filteredProducts = [];
-  if (product1 || product2 || product3) {
-    const idsToMatch = [product1, product2, product3].filter(Boolean);
-    filteredProducts = products.filter((p) => idsToMatch.includes(p.productId));
-  } else {
-    filteredProducts = products.slice(0, 20);
-  }
+  const maxTitleLength = 45;
 
-  const productRows = [];
-  for (let i = 0; i < filteredProducts.length; i += 4) {
-    productRows.push(...filteredProducts.slice(i, i + 4));
-  }
+  const truncate = (text, length) => {
+    return text.length > length ? text.substring(0, length).trim() + '...' : text;
+  };
+
+  const productHtml = products.slice(0, 3).map(product => {
+    const {
+      title = 'Product Title',
+      image = 'https://via.placeholder.com/180x200',
+      link = '#'
+    } = product;
+
+    const displayTitle = truncate(title, maxTitleLength);
+
+    return `
+      <td class="column" width="33.33%" style="padding: 10px; text-align: center;">
+        <img src="${image}" alt="${title}" width="280" height="310" style="width: 280px; height: 310px; object-fit: cover; display: block; margin: auto;">
+        <p class="product-title" style="max-width: 180px; font-size: ${productTitleSize}; font-weight: bold; margin: 15px auto 10px; color: ${productTitleColor}; word-wrap: break-word; overflow-wrap: break-word;">
+          ${displayTitle}
+        </p>
+        <a href="${link}" style="width: 70%; display: inline-block; padding: 10px 20px; border: ${buttonBorder}; background: ${buttonStyle === 'outline' ? 'transparent' : buttonBackground}; text-decoration: none; color: ${buttonTextColor}; font-weight: bold;">
+          SHOP NOW
+        </a>
+      </td>
+    `;
+  }).join('');
 
   return `
-    <div style="display: flex; flex-wrap: wrap; gap: 1rem; font-family: sans-serif; justify-content: space-between;">
-      ${productRows.map(product => `
-        <div style="
-          flex-basis: calc(25% - 1rem);
-          margin-bottom: 1rem;
-          border: 1px solid #ddd;
-          border-radius: 10px;
-          overflow: hidden;
-          box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-          background: #fff;
-          position: relative;
-        ">
-          <div style="position: relative; width: 100%; padding-top: 100%; overflow: hidden;">
-            <img src="${product.image}" alt="${product.title}" style="
-              position: absolute;
-              top: 0;
-              left: 0;
-              width: 100%;
-              height: 100%;
-              object-fit: cover;
-            " />
-            <div style="
-              position: absolute;
-              top: 0;
-              right: 0;
-              background: #3b82f6;
-              color: white;
-              font-size: 12px;
-              padding: 4px 6px;
-              border-bottom-left-radius: 8px;
-            ">${product.percentage}% OFF</div>
-          </div>
-          <div style="padding: 0.75rem;">
-            ${product.bestSellerRank < 60000 ? `
-              <div style="background: gold; display: inline-block; padding: 2px 6px; font-size: 12px; border-radius: 4px; margin-bottom: 4px;">BEST SELLER</div>` : ''}
-            <p style="font-weight: bold; font-size: 14px; margin: 0 0 4px;">
-              ${product.title.length > 60 ? product.title.slice(0, 60) + '...' : product.title}
-            </p>
-            <p style="margin: 0 0 4px;">
-              <span style="color: red; font-weight: bold;">$${product.discountedPrice.toFixed(2)}</span>
-              <span style="text-decoration: line-through; color: #888; font-size: 12px;">$${product.price.toFixed(2)}</span>
-            </p>
-            <p style="font-size: 13px; margin: 0 0 4px;">⭐ ${product.ratingStars} (${product.ratingCount})</p>
-            <p style="font-size: 12px; color: #666;">valid through<br/><strong>${formatDate(product.validTill)}</strong></p>
-            <a href="${affiliateTag ? product.url.replace('getpoln-20', affiliateTag) : product.url}" target="_blank" style="
-              display: block;
-              text-align: center;
-              background: #6366f1;
-              color: white;
-              padding: 6px 0;
-              margin-top: 8px;
-              border-radius: 6px;
-              text-decoration: none;
-              font-weight: bold;
-            ">Get Deal</a>
-          </div>
-        </div>
-      `).join('')}
-    </div>
+    <body style="Margin:0;padding:0;background-color:#ffffff;font-family:Arial,sans-serif;">
+
+    <table role="presentation" width="80%" border="0" cellspacing="0" cellpadding="0" style="margin: auto;">
+      <tr>
+        <td align="center" style="padding: 20px 10px; background: ${titleBackgroundColor};">
+          <h2 style="margin: 0; font-size: ${titleFontSize}; color: ${titleFontColor}; font-style: ${titleFontStyle};">
+            ${titleLine1}
+          </h2>
+          <h2 style="margin: 0; font-size: ${titleFontSize}; color: ${titleFontColor}; font-style: ${titleFontStyle};">
+            ${titleLine2}
+          </h2>
+        </td>
+      </tr>
+      <tr>
+        <td align="center" style="padding: 20px 0;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+            <tr>
+              ${productHtml}
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+  </body>
     <style>
       /* Responsive Design */
-      @media (max-width: 1200px) {
-        .deal-item {
-          flex-basis: calc(33.33% - 1rem);
+      @media (max-width: 600px) {
+        .column {
+          display: block !important;
+          width: 100% !important;
+          max-width: 100% !important;
         }
-      }
-      @media (max-width: 768px) {
-        .deal-item {
-          flex-basis: calc(50% - 1rem);
-        }
-      }
-      @media (max-width: 480px) {
-        .deal-item {
-          flex-basis: 100%;
+        .product-title {
+          max-width: 100% !important;
         }
       }
     </style>
@@ -133,7 +120,15 @@ const getDealsHtml = (products, settings) => {
 
 
 app.post('/posts/html', async (request, response) => {
-  const settings = request.body.settings;
+  const settings = {
+    titleLine1: 'Hello Hekko Hllo',
+    titleLine2: 'abcd efg hij k',
+    titleFontSize: '20px',
+    titleFontColor: '#b505f4',
+    productTitleSize: '16px',
+    buttonBackground: '#f09822',
+    buttonStyle: 'solid'
+  };
 
   logger.info(`Received request to getDeals`);
 
