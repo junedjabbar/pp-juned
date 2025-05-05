@@ -32,7 +32,24 @@ const formatDate = (dateStr) => {
   });
 };
 
-const getDealsHtml = (products, affiliateTag) => {
+const getDealsHtml = (products, settings) => {
+
+  const { affiliateTag, product1, product2, product3 } = settings
+
+  // Filter products based on product1, product2, product3 if defined
+  let filteredProducts = [];
+  if (product1 || product2 || product3) {
+    const idsToMatch = [product1, product2, product3].filter(Boolean);
+    filteredProducts = products.filter((p) => idsToMatch.includes(p.productId));
+  } else {
+    filteredProducts = products.slice(0, 20);
+  }
+
+  const productRows = [];
+  for (let i = 0; i < filteredProducts.length; i += 4) {
+    productRows.push(...filteredProducts.slice(i, i + 4));
+  }
+
   return `
     <div style="display: flex; flex-wrap: wrap; gap: 1rem; font-family: sans-serif; justify-content: space-between;">
       ${products.map(product => `
