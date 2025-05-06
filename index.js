@@ -33,6 +33,8 @@ const getDeals = async (settings) => {
     url = `${getUrl()}/crm/deals?asin=${encodeURIComponent(idsToMatch)}`;
   }
 
+  console.log(`Making api call [${url}]`)
+
   const res = await axios.get(url);
 
   if (product1 || product2 || product3) {
