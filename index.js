@@ -28,6 +28,7 @@ const getDeals = async (settings) => {
   } else if (category) {
     url = `${getUrl()}/crm/deals?categories=${encodeURIComponent(category)}&offset=0&limit=40`;
   } else if (product1 || product2 || product3) {
+    console.log(`Making product api call`)
     const idsToMatch = [product1, product2, product3].filter(Boolean);
     url = `${getUrl()}/crm/deals?asin=${encodeURIComponent(idsToMatch)}`;
   }
@@ -206,7 +207,7 @@ app.post('/search', async (request, response) => {
 app.post('/kit', async (request, response) => {
   const settings = request.body.settings;
 
-  logger.info(`Received request to getDeals`);
+  logger.info(`Received request to getDeals with params [${JSON.stringify(settings)}]`);
 
   const products = await getDeals(settings);
 
