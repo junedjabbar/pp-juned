@@ -134,6 +134,8 @@ const getDealsHtml = (products, settings) => {
 app.post('/search', async (request, response) => {
   const query = request.body.search;
 
+  console.log(JSON.stringify(request))
+
   if (!query) {
     return response.json({ code: 200, data: [{ label: 'Creatine Gummies', value: 'gummies' }] });
   }
