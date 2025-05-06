@@ -131,8 +131,28 @@ const getDealsHtml = (products, settings) => {
   `;
 };
 
+app.post('/search', async (request, response) => {
+  const settings = request.body.settings
 
-app.post('/posts/html', async (request, response) => {
+  const { search } = settings
+
+  if (search == '') {
+    return response.json({
+      code: 200,
+      data: [{ label: 'Creatine Gummies', value: 'gummies' }]
+    });
+  }
+
+  const url = `https://qa-site-api.getpoln.com/crm/searchTerm?search=${encodeURIComponent(search)}`
+
+  const res = await axios.get(url);
+  return response.json({
+    code: 200,
+    data: res.data?.data?.splice(0, 5)
+  })
+})
+
+app.post('/kit', async (request, response) => {
   const settings = request.body.settings;
 
   logger.info(`Received request to getDeals`);
