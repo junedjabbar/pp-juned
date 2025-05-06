@@ -23,11 +23,11 @@ const getDeals = async (settings) => {
   const { category, search, product1, product2, product3 } = settings;
   let url = `${getUrl()}/crm/deals?categories=Adult+Clothing%2C+Shoes+%26+Accessories&offset=0&limit=10`;
 
-  if (search) {
+  if (search !== '') {
     url = `${getUrl()}/crm/deals?search=${encodeURIComponent(search)}&offset=0&limit=10`;
-  } else if (category) {
+  } else if (category !== '') {
     url = `${getUrl()}/crm/deals?categories=${encodeURIComponent(category)}&offset=0&limit=10`;
-  } else if (product1 || product2 || product3) {
+  } else if (product1 !== '' || product2 !== '' || product3 !== '') {
     console.log(`Making product api call`)
     const idsToMatch = [product1, product2, product3].filter(Boolean);
     url = `${getUrl()}/crm/deals?asin=${encodeURIComponent(idsToMatch)}`;
@@ -61,7 +61,7 @@ const getDealsHtml2 = (products, settings) => {
     productTitleSize = '14px',
     buttonBackground = '#6366f1',
     buttonStyle = 'solid',
-    buttonTextColor ,
+    buttonTextColor,
     maxTitleLength = 45,
   } = settings;
 
@@ -69,13 +69,12 @@ const getDealsHtml2 = (products, settings) => {
   const finalButtonBackground = isOutline ? 'transparent' : buttonBackground;
   const finalButtonBorder = isOutline ? `1px solid ${buttonBackground}` : 'none';
   const finalButtonTextColor = isOutline
-      ? (buttonTextColor || buttonBackground)
-      : (buttonTextColor || '#ffffff');
+    ? (buttonTextColor || buttonBackground)
+    : (buttonTextColor || '#ffffff');
 
   const filteredProducts = products.slice(0, 20);
-
   const truncate = (text, length) =>
-      text.length > length ? text.substring(0, length).trim() + '...' : text;
+    text.length > length ? text.substring(0, length).trim() + '...' : text;
 
   const productHtml = [];
   for (let i = 0; i < filteredProducts.length; i += 3) {
@@ -106,7 +105,6 @@ const getDealsHtml2 = (products, settings) => {
   }
 
   return `
-  </head>
     <style>
       @media (max-width: 600px) {
         .column {
@@ -119,18 +117,15 @@ const getDealsHtml2 = (products, settings) => {
         }
       }
     </style>
-  </head>
-  <body style="Margin:0;padding:0;background-color:#ffffff;font-family:Arial,sans-serif;">
     <table role="presentation" width="80%" border="0" cellspacing="0" cellpadding="0" style="margin: auto;">
-      ${
-      (titleLine1 || titleLine2) &&
-      `<tr>
+      ${(titleLine1 || titleLine2) &&
+    `<tr>
           <td align="center" style="padding: 20px 10px; background: ${titleBackgroundColor};">
             ${titleLine1 ? `<h2 style="margin: 0; font-size: ${titleFontSize}; color: ${titleFontColor}; font-style: ${titleFontStyle};">${titleLine1}</h2>` : ''}
             ${titleLine2 ? `<h2 style="margin: 0; font-size: ${titleFontSize}; color: ${titleFontColor}; font-style: ${titleFontStyle};">${titleLine2}</h2>` : ''}
           </td>
         </tr>`
-  }
+    }
       <tr>
         <td align="center" style="padding: 20px 0;">
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
@@ -138,26 +133,23 @@ const getDealsHtml2 = (products, settings) => {
           </table>
         </td>
       </tr>
-      <br/>
       <tr>
-  <td align="center" style="padding: 20px 10px; background: ${titleBackgroundColor};">
-    <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center">
-      <tr>
-        <td style="vertical-align: middle;">
-          <span style="font-size: 25px; color: ${titleFontColor};">
-            Powered by
-          </span>
-        </td>
-        <td style="vertical-align: middle; padding-left: 30px;">
-          <img src="https://res.cloudinary.com/dh5pf5on1/image/upload/v1746541456/temp/ajfnbz1ejntpjbkyqfaj.png" alt="Brand Logo" style="width: 130px;height: 35px; display: block;" />
+        <td align="center" style="padding: 20px 10px; background: ${titleBackgroundColor};">
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center">
+            <tr>
+              <td style="vertical-align: middle;">
+                <span style="font-size: 25px; color: ${titleFontColor};">
+                  Powered by
+                </span>
+              </td>
+              <td style="vertical-align: middle; padding-left: 30px;">
+                <img src="https://res.cloudinary.com/dh5pf5on1/image/upload/v1746541456/temp/ajfnbz1ejntpjbkyqfaj.png" alt="Brand Logo" style="width: 130px;height: 35px; display: block;" />
+              </td>
+            </tr>
+          </table>
         </td>
       </tr>
     </table>
-  </td>
-</tr>
-    </table>
-  </body>
-  </html>
   `;
 };
 
