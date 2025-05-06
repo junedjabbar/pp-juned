@@ -154,7 +154,7 @@ app.post('/search', async (request, response) => {
     return response.json({ code: 200, data: [{ label: 'Creatine Gummies', value: 'gummies' }] });
   }
 
-  const url = `https://qa-site-api.getpoln.com/crm/searchTerm?search=${encodeURIComponent(q)}`
+  const url = `https://qa-site-api.getpoln.com/crm/searchTerm?search=${encodeURIComponent(search)}`
 
   const res = await axios.get(url);
   const results = res.data?.data?.splice(0, 5) || []
