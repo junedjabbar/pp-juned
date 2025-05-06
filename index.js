@@ -21,12 +21,12 @@ const getUrl = () => {
 
 const getDeals = async (settings) => {
   const { category, search, product1, product2, product3 } = settings;
-  let url = `${getUrl()}/crm/deals?categories=Adult+Clothing%2C+Shoes+%26+Accessories&offset=0&limit=40`;
+  let url = `${getUrl()}/crm/deals?categories=Adult+Clothing%2C+Shoes+%26+Accessories&offset=0&limit=10`;
 
   if (search) {
-    url = `${getUrl()}/crm/deals?search=${encodeURIComponent(search)}&offset=0&limit=40`;
+    url = `${getUrl()}/crm/deals?search=${encodeURIComponent(search)}&offset=0&limit=10`;
   } else if (category) {
-    url = `${getUrl()}/crm/deals?categories=${encodeURIComponent(category)}&offset=0&limit=40`;
+    url = `${getUrl()}/crm/deals?categories=${encodeURIComponent(category)}&offset=0&limit=10`;
   } else if (product1 || product2 || product3) {
     console.log(`Making product api call`)
     const idsToMatch = [product1, product2, product3].filter(Boolean);
