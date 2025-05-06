@@ -134,16 +134,16 @@ const getDealsHtml = (products, settings) => {
 app.post('/search', async (request, response) => {
   const settings = request.body.settings
 
-  const { search } = settings
+  const { query } = settings
 
-  if (search == '') {
+  if (query == '') {
     return response.json({
       code: 200,
       data: [{ label: 'Creatine Gummies', value: 'gummies' }]
     });
   }
 
-  const url = `https://qa-site-api.getpoln.com/crm/searchTerm?search=${encodeURIComponent(search)}`
+  const url = `https://qa-site-api.getpoln.com/crm/searchTerm?search=${encodeURIComponent(query)}`
 
   const res = await axios.get(url);
   return response.json({
