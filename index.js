@@ -10,13 +10,13 @@ app.use(express.json())
 const logger = console
 
 const getUrl = () => {
-  if (process.env.PB_PROFILE === 'qa') {
-    return 'https://qa-site-api.getpoln.com'
+  if (process.env.PB_PROFILE === 'local') {
+    return 'http://localhost:3002/a'
   } else if (process.env.PB_PROFILE === 'prod') {
     return 'https://site-api.getpoln.com'
   }
-
-  return 'http://localhost:3002/a'
+  
+  return 'https://qa-site-api.getpoln.com'
 }
 
 const getDeals = async (settings) => {
