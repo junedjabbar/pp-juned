@@ -146,16 +146,15 @@ function safeStringify(obj) {
 }
 
 app.post('/search', async (request, response) => {
-  const query = request.body.search;
+  const search = request.body.search;
 
-  console.log('Request:', safeStringify(request));
+  console.log('Request: ', search);
 
-  if (!query) {
+  if (search === '') {
     return response.json({ code: 200, data: [{ label: 'Creatine Gummies', value: 'gummies' }] });
   }
 
-  // Search logic (example)
-  response.json({
+  return response.json({
     code: 200,
     data: [
       { label: 'Whey Protein', value: 'whey_protein' },
