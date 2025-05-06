@@ -137,19 +137,16 @@ app.get('/search', async (request, response) => {
   const { query } = settings
 
   if (query == '') {
-    return response.json({
-      code: 200,
-      data: [{ label: 'Creatine Gummies', value: 'gummies' }]
-    });
+    return response.json([
+      { label: 'Creatine Gummies', value: 'gummies' }
+    ]);
   }
 
   const url = `https://qa-site-api.getpoln.com/crm/searchTerm?search=${encodeURIComponent(query)}`
 
   const res = await axios.get(url);
-  return response.json({
-    code: 200,
-    data: res.data?.data?.splice(0, 5)
-  })
+  const results = res.data?.data?.splice(0, 5) || []
+  return response.json(results)
 })
 
 app.post('/kit', async (request, response) => {
