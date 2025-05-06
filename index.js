@@ -131,7 +131,7 @@ const getDealsHtml = (products, settings) => {
   `;
 };
 
-app.get('/search', async (request, response) => {
+app.post('/search', async (request, response) => {
   console.log(JSON.stringify(request.query))
 
   debugger
