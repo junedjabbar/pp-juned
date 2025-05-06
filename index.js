@@ -132,25 +132,20 @@ const getDealsHtml = (products, settings) => {
 };
 
 app.post('/search', async (request, response) => {
-  console.log(JSON.stringify(request.query))
+  const body = request.body
+
+  console.log(JSON.stringify(body))
 
   debugger
 
+  // if (!q || (q && q.length == 0)) {
   const toReturn = {
     code: 200,
     data: [
       { label: 'Creatine Gummies', value: 'gummies' }
     ]
   }
-
-  // console.log(`Returning response [${JSON.stringify(toReturn)}]`)
-
   response.json(toReturn);
-
-  // if (q == '') {
-  //   return response.json([
-  //     { label: 'Creatine Gummies', value: 'gummies' }
-  //   ]);
   // }
 
   // const url = `https://qa-site-api.getpoln.com/crm/searchTerm?search=${encodeURIComponent(q)}`
