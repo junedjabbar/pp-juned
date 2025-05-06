@@ -145,6 +145,17 @@ function safeStringify(obj) {
   }, 2); // The `2` is for pretty-printing with indentation
 }
 
+function cleanText(text) {
+  return text
+      .replace(/^Title:\s*/, '') // remove 'Title:'
+      .replace(/[^\w\s]/g, '')   // remove special characters (except letters, numbers, spaces)
+      .replace(/\s+/g, ' ')      // normalize whitespace
+      .trim()
+      .split(' ')                       // split into words
+      .slice(0, 5)                     // take first 5
+      .join(' ');
+}
+
 app.post('/search', async (request, response) => {
   const search = request.body.search;
 
@@ -158,6 +169,10 @@ app.post('/search', async (request, response) => {
 
   const res = await axios.get(url);
   const results = res.data?.data?.splice(0, 5) || []
+  results.forEach(r => {
+    r.label = cleanText(r.label)
+    r.value = cleanText(r.label)
+  })
   console.log(`Returning results: [${JSON.stringify(results)}]`)
   return response.json({ code: 200, data: results })
 })
