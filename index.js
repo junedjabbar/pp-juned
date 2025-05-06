@@ -33,6 +33,11 @@ const getDeals = async (settings) => {
   }
 
   const res = await axios.get(url);
+
+  if (product1 || product2 || product3) {
+    return res.data
+  }
+
   return res.data.data;
 };
 
