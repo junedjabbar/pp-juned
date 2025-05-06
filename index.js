@@ -132,21 +132,20 @@ const getDealsHtml = (products, settings) => {
 };
 
 app.post('/search', async (request, response) => {
-  const body = request.body
+  const query = request.body.search;
 
-  console.log(JSON.stringify(body))
+  if (!query) {
+    return response.json({ code: 200, data: [{ label: 'Creatine Gummies', value: 'gummies' }] });
+  }
 
-  debugger
-
-  // if (!q || (q && q.length == 0)) {
-  const toReturn = {
+  // Search logic (example)
+  response.json({
     code: 200,
     data: [
-      { label: 'Creatine Gummies', value: 'gummies' }
+      { label: 'Whey Protein', value: 'whey_protein' },
+      { label: 'Creatine', value: 'creatine' }
     ]
-  }
-  response.json(toReturn);
-  // }
+  });
 
   // const url = `https://qa-site-api.getpoln.com/crm/searchTerm?search=${encodeURIComponent(q)}`
 
