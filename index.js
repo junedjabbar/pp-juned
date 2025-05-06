@@ -39,9 +39,12 @@ const getDeals = async (settings) => {
 
   if (category || search) {
     return res.data.data;
+  } else if (product1 || product2 || product3) {
+    return res.data
   }
-  
-  return res.data
+
+  return res.data.data;
+
 };
 
 const formatDate = (dateStr) => {
