@@ -131,10 +131,24 @@ const getDealsHtml = (products, settings) => {
   `;
 };
 
+function safeStringify(obj) {
+  const seen = new Set();
+  return JSON.stringify(obj, (key, value) => {
+    // Prevent circular references
+    if (typeof value === 'object' && value !== null) {
+      if (seen.has(value)) {
+        return '[Circular]';
+      }
+      seen.add(value);
+    }
+    return value;
+  }, 2); // The `2` is for pretty-printing with indentation
+}
+
 app.post('/search', async (request, response) => {
   const query = request.body.search;
 
-  console.log(JSON.stringify(request))
+  console.log('Request:', safeStringify(req));
 
   if (!query) {
     return response.json({ code: 200, data: [{ label: 'Creatine Gummies', value: 'gummies' }] });
