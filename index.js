@@ -143,7 +143,7 @@ app.post('/search', async (request, response) => {
     ]
   }
 
-  console.log(`Returning response [${JSON.stringify(toReturn)}]`)
+  // console.log(`Returning response [${JSON.stringify(toReturn)}]`)
 
   response.json(toReturn);
 
