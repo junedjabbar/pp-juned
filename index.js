@@ -131,7 +131,7 @@ const getDealsHtml = (products, settings) => {
   `;
 };
 
-app.post('/search', async (request, response) => {
+app.get('/search', async (request, response) => {
   const settings = request.body.settings
 
   const { query } = settings
