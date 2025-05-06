@@ -136,7 +136,7 @@ app.post('/search', async (request, response) => {
 
   debugger
 
-  res.json([
+  response.json([
     { label: 'Creatine Gummies', value: 'gummies' }
   ]);
 
