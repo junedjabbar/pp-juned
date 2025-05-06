@@ -142,7 +142,7 @@ const getDealsHtml2 = (products, settings) => {
                   Powered by
                 </span>
               </td>
-              <td style="vertical-align: middle; padding-left: 30px;">
+              <td style="vertical-align: middle;">
                 <img src="https://res.cloudinary.com/dh5pf5on1/image/upload/v1746541456/temp/ajfnbz1ejntpjbkyqfaj.png" alt="Brand Logo" style="width: 130px;height: 35px; display: block;" />
               </td>
             </tr>
