@@ -136,12 +136,9 @@ app.get('/search', async (request, response) => {
 
   debugger
 
-  response.json({
-    code: 200,
-    data: [
-      { label: 'Creatine Gummies', value: 'gummies' }
-    ]
-  });
+  res.json([
+    { label: 'Creatine Gummies', value: 'gummies' }
+  ]);
 
   // if (q == '') {
   //   return response.json([
