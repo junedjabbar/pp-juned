@@ -24,15 +24,13 @@ const getDeals = async (settings) => {
 
   let url = `${getUrl()}/crm/deals?categories=Adult+Clothing%2C+Shoes+%26+Accessories&offset=0&limit=10`;
 
-  if (search?.trim()) {
+  const idsToMatch = [product1, product2, product3].filter(Boolean);
+  if (idsToMatch.length > 0) {
+    url = `${getUrl()}/crm/deals?asin=${encodeURIComponent(idsToMatch)}&offset=0&limit=10`;
+  } else if (search?.trim()) {
     url = `${getUrl()}/crm/deals?search=${encodeURIComponent(search)}&offset=0&limit=10`;
   } else if (category?.trim()) {
     url = `${getUrl()}/crm/deals?categories=${encodeURIComponent(category)}&offset=0&limit=10`;
-  } else {
-    const idsToMatch = [product1, product2, product3].filter(Boolean);
-    if (idsToMatch.length > 0) {
-      url = `${getUrl()}/crm/deals?asin=${encodeURIComponent(idsToMatch)}&offset=0&limit=10`;
-    }
   }
 
   console.log(`Making api call [${url}]`);
