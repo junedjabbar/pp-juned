@@ -154,19 +154,12 @@ app.post('/search', async (request, response) => {
     return response.json({ code: 200, data: [{ label: 'Creatine Gummies', value: 'gummies' }] });
   }
 
-  return response.json({
-    code: 200,
-    data: [
-      { label: 'Whey Protein', value: 'whey_protein' },
-      { label: 'Creatine', value: 'creatine' }
-    ]
-  });
+  const url = `https://qa-site-api.getpoln.com/crm/searchTerm?search=${encodeURIComponent(q)}`
 
-  // const url = `https://qa-site-api.getpoln.com/crm/searchTerm?search=${encodeURIComponent(q)}`
-
-  // const res = await axios.get(url);
-  // const results = res.data?.data?.splice(0, 5) || []
-  // return response.json(results)
+  const res = await axios.get(url);
+  const results = res.data?.data?.splice(0, 5) || []
+  console.log(`Returning results: [${JSON.stringify(results)}]`)
+  return response.json({ code: 200, data: results })
 })
 
 app.post('/kit', async (request, response) => {
@@ -178,7 +171,7 @@ app.post('/kit', async (request, response) => {
 
   const html = getDealsHtml(products, settings); // Show first 6 products
 
-  response.json({
+  return response.json({
     code: 200,
     html
   });
