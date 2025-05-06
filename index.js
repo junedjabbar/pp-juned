@@ -129,21 +129,23 @@ const getDealsHtml2 = (products, settings) => {
       </tr>
       <br/>
       <tr>
-        <td align="center" style="padding: 20px 10px; background: ${titleBackgroundColor};">
-          <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center">
-            <tr>
-              <td style="vertical-align: middle;">
-                <span style="font-size: 22px; color: ${titleFontColor};">
-                  Powered by
-                </span>
-              </td>
-              <td style="vertical-align: middle;">
-                <img src="https://res.cloudinary.com/dh5pf5on1/image/upload/v1746541456/temp/ajfnbz1ejntpjbkyqfaj.png" alt="Brand Logo" style="width: 130px;height: 35px; display: block;" />
-              </td>
-            </tr>
-          </table>
-        </td>
-    </tr>
+  <td align="center" style="padding: 20px 10px; background: ${titleBackgroundColor};">
+    <a href="https://datadyno.co" target="_blank" style="text-decoration: none; display: inline-block;">
+      <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center">
+        <tr>
+          <td style="vertical-align: middle;">
+            <span style="font-size: 22px; color: ${titleFontColor};">
+              Powered by
+            </span>
+          </td>
+          <td style="vertical-align: middle;">
+            <img src="https://res.cloudinary.com/dh5pf5on1/image/upload/v1746541456/temp/ajfnbz1ejntpjbkyqfaj.png" alt="Brand Logo" style="width: 130px;height: 35px; display: block;" />
+          </td>
+        </tr>
+      </table>
+    </a>
+  </td>
+ </tr>
     </table>
   </body>
   `
