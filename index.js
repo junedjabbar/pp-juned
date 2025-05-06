@@ -15,7 +15,7 @@ const getUrl = () => {
   } else if (process.env.PB_PROFILE === 'prod') {
     return 'https://site-api.getpoln.com'
   }
-  
+
   return 'https://qa-site-api.getpoln.com'
 }
 
@@ -178,11 +178,10 @@ app.post('/categories', async (request, response) => {
   const url = `${getUrl()}/crm/categories`
 
   const res = await axios.get(url);
-  const output = {
-    data: res.data && res.data.data && res.data.data.map(item => {
-        return { label: item, value: item };
-    })
-};
+  const output = res.data && res.data.data && res.data.data.map(item => {
+    return { label: item, value: item };
+  })
+  
   return response.json({
     code: 200,
     data: output || []
