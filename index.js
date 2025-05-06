@@ -148,7 +148,7 @@ function safeStringify(obj) {
 app.post('/search', async (request, response) => {
   const query = request.body.search;
 
-  console.log('Request:', safeStringify(req));
+  console.log('Request:', safeStringify(request));
 
   if (!query) {
     return response.json({ code: 200, data: [{ label: 'Creatine Gummies', value: 'gummies' }] });
