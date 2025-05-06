@@ -37,11 +37,11 @@ const getDeals = async (settings) => {
 
   const res = await axios.get(url);
 
-  if (product1 || product2 || product3) {
-    return res.data
+  if (category || search) {
+    return res.data.data;
   }
-
-  return res.data.data;
+  
+  return res.data
 };
 
 const formatDate = (dateStr) => {
