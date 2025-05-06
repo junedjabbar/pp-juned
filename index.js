@@ -174,7 +174,7 @@ app.post('/categories', async (request, response) => {
     })
   }
 
-  output.unshift({ label: '', value: '' })
+  output.unshift({ label: 'Clear Selection', value: '' })
 
   return response.json({
     code: 200,
@@ -188,7 +188,7 @@ app.post('/search', async (request, response) => {
   console.log('Request: ', search);
 
   if (search === '') {
-    return response.json({ code: 200, data: [{ label: '', value: '' }, { label: 'Creatine Gummies', value: 'gummies' }] });
+    return response.json({ code: 200, data: [{ label: 'Clear Selection', value: '' }, { label: 'Creatine Gummies', value: 'gummies' }] });
   }
 
   const url = `${getUrl()}/crm/searchTerm?search=${encodeURIComponent(search)}`
@@ -201,7 +201,7 @@ app.post('/search', async (request, response) => {
     r.value = cleanText(r.label)
   })
 
-  results.unshift({ label: '', value: '' })
+  results.unshift({ label: 'Clear Selection', value: '' })
   console.log(`Returning results: [${JSON.stringify(results)}]`)
   return response.json({ code: 200, data: results })
 })
