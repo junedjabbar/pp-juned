@@ -27,9 +27,9 @@ const getDeals = async (settings) => {
   const idsToMatch = [product1, product2, product3].filter(Boolean);
   if (idsToMatch.length > 0) {
     url = `${getUrl()}/crm/deals?asin=${encodeURIComponent(idsToMatch)}&offset=0&limit=10`;
-  } else if (search?.trim()) {
+  } else if (search?.trim() && search !== 'Clear') {
     url = `${getUrl()}/crm/deals?search=${encodeURIComponent(search)}&offset=0&limit=10`;
-  } else if (category?.trim()) {
+  } else if (category?.trim() && category !== 'Clear') {
     url = `${getUrl()}/crm/deals?categories=${encodeURIComponent(category)}&offset=0&limit=10`;
   }
 
