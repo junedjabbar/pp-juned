@@ -70,13 +70,13 @@ const getDealsHtml2 = (products, settings) => {
   const finalButtonBackground = isOutline ? 'transparent' : buttonBackground;
   const finalButtonBorder = isOutline ? `1px solid ${buttonBackground}` : 'none';
   const finalButtonTextColor = isOutline
-      ? (buttonTextColor || buttonBackground)
-      : (buttonTextColor || '#ffffff');
+    ? (buttonTextColor || buttonBackground)
+    : (buttonTextColor || '#ffffff');
 
   const filteredProducts = products.slice(0, 20);
 
   const truncate = (text, length) =>
-      text.length > length ? text.substring(0, length).trim() + '...' : text;
+    text.length > length ? text.substring(0, length).trim() + '...' : text;
 
   const productHtml = [];
   for (let i = 0; i < filteredProducts.length; i += 3) {
@@ -111,15 +111,14 @@ const getDealsHtml2 = (products, settings) => {
   return `
   <body style="Margin:0;padding:0;background-color:#ffffff;font-family:Arial,sans-serif;">
     <table role="presentation" width="80%" border="0" cellspacing="0" cellpadding="0" style="margin: auto;">
-      ${
-      (titleLine1 || titleLine2) &&
-      `<tr>
+      ${(titleLine1 || titleLine2) &&
+    `<tr>
           <td align="center" style="padding: 20px 10px; background: ${titleBackgroundColor};">
             ${titleLine1 ? `<h2 style="margin: 0; font-size: ${titleFontSize}; color: ${titleFontColor}; font-style: ${titleFontStyle};">${titleLine1}</h2>` : ''}
             ${titleLine2 ? `<h2 style="margin: 0; font-size: ${titleFontSize}; color: ${titleFontColor}; font-style: ${titleFontStyle};">${titleLine2}</h2>` : ''}
           </td>
         </tr>`
-  }
+    }
       <tr>
         <td align="center" style="padding: 20px 0;">
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
@@ -167,9 +166,15 @@ app.post('/categories', async (request, response) => {
   const url = `${getUrl()}/crm/categories`
 
   const res = await axios.get(url);
-  const output = res.data && res.data.data && res.data.data.map(item => {
-    return { label: item, value: item };
-  })
+  const output = []
+
+  if (res.data && res.data.data) {
+    res.data.data.map(item => {
+      output.push({ label: item, value: item })
+    })
+  }
+
+  output.unshift({ label: '', value: '' })
 
   return response.json({
     code: 200,
@@ -183,17 +188,20 @@ app.post('/search', async (request, response) => {
   console.log('Request: ', search);
 
   if (search === '') {
-    return response.json({ code: 200, data: [{ label: 'Creatine Gummies', value: 'gummies' }] });
+    return response.json({ code: 200, data: [{ label: '', value: '' }, { label: 'Creatine Gummies', value: 'gummies' }] });
   }
 
   const url = `${getUrl()}/crm/searchTerm?search=${encodeURIComponent(search)}`
 
   const res = await axios.get(url);
-  const results = res.data?.data?.splice(0, 5) || []
+  const results = []
+  results.push(...res.data?.data?.splice(0, 5)) || []
   results.forEach(r => {
     r.label = cleanText(r.label)
     r.value = cleanText(r.label)
   })
+
+  results.unshift({ label: '', value: '' })
   console.log(`Returning results: [${JSON.stringify(results)}]`)
   return response.json({ code: 200, data: results })
 })
