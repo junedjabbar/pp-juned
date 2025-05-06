@@ -136,9 +136,16 @@ app.post('/search', async (request, response) => {
 
   debugger
 
-  response.json([
-    { label: 'Creatine Gummies', value: 'gummies' }
-  ]);
+  const toReturn = {
+    code: 200,
+    data: [
+      { label: 'Creatine Gummies', value: 'gummies' }
+    ]
+  }
+
+  console.log(`Returning response [${JSON.stringify(toReturn)}]`)
+
+  response.json(toReturn);
 
   // if (q == '') {
   //   return response.json([
