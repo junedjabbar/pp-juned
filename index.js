@@ -9,14 +9,27 @@ app.use(express.json())
 
 const logger = console
 
+const getUrl = () => {
+  if (process.env.PB_PROFILE === 'qa') {
+    return 'https://qa-site-api.getpoln.com'
+  } else if (process.env.PB_PROFILE === 'prod') {
+    return 'https://site-api.getpoln.com'
+  }
+
+  return 'http://localhost:3002/a'
+}
+
 const getDeals = async (settings) => {
-  const { category, search } = settings;
-  let url = `https://site-api.getpoln.com/crm/deals?categories=Adult+Clothing%2C+Shoes+%26+Accessories&offset=0&limit=20`;
+  const { category, search, product1, product2, product3 } = settings;
+  let url = `${getUrl()}/crm/deals?categories=Adult+Clothing%2C+Shoes+%26+Accessories&offset=0&limit=40`;
 
   if (search) {
-    url = `https://site-api.getpoln.com/crm/deals?search=${encodeURIComponent(search)}&offset=0&limit=40`;
+    url = `${getUrl()}/crm/deals?search=${encodeURIComponent(search)}&offset=0&limit=40`;
   } else if (category) {
-    url = `https://site-api.getpoln.com/crm/deals?categories=${encodeURIComponent(category)}&offset=0&limit=40`;
+    url = `${getUrl()}/crm/deals?categories=${encodeURIComponent(category)}&offset=0&limit=40`;
+  } else if (product1 || product2 || product3) {
+    const idsToMatch = [product1, product2, product3].filter(Boolean);
+    url = `${getUrl()}/crm/deals?asin=${encodeURIComponent(idsToMatch)}`;
   }
 
   const res = await axios.get(url);
@@ -147,14 +160,29 @@ function safeStringify(obj) {
 
 function cleanText(text) {
   return text
-      .replace(/^Title:\s*/, '') // remove 'Title:'
-      .replace(/[^\w\s]/g, '')   // remove special characters (except letters, numbers, spaces)
-      .replace(/\s+/g, ' ')      // normalize whitespace
-      .trim()
-      .split(' ')                       // split into words
-      .slice(0, 5)                     // take first 5
-      .join(' ');
+    .replace(/^Title:\s*/, '') // remove 'Title:'
+    .replace(/[^\w\s]/g, '')   // remove special characters (except letters, numbers, spaces)
+    .replace(/\s+/g, ' ')      // normalize whitespace
+    .trim()
+    .split(' ')                       // split into words
+    .slice(0, 5)                     // take first 5
+    .join(' ');
 }
+
+app.post('/categories', async (request, response) => {
+  const url = `${getUrl()}/crm/categories`
+
+  const res = await axios.get(url);
+  const output = {
+    data: res.data && res.data.data && res.data.data.map(item => {
+        return { label: item, value: item };
+    })
+};
+  return response.json({
+    code: 200,
+    data: output || []
+  })
+})
 
 app.post('/search', async (request, response) => {
   const search = request.body.search;
@@ -165,7 +193,7 @@ app.post('/search', async (request, response) => {
     return response.json({ code: 200, data: [{ label: 'Creatine Gummies', value: 'gummies' }] });
   }
 
-  const url = `https://qa-site-api.getpoln.com/crm/searchTerm?search=${encodeURIComponent(search)}`
+  const url = `${getUrl()}/crm/searchTerm?search=${encodeURIComponent(search)}`
 
   const res = await axios.get(url);
   const results = res.data?.data?.splice(0, 5) || []
