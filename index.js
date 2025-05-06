@@ -36,15 +36,7 @@ const getDeals = async (settings) => {
   console.log(`Making api call [${url}]`)
 
   const res = await axios.get(url);
-
-  if (category || search) {
-    return res.data.data;
-  } else if (product1 || product2 || product3) {
-    return res.data
-  }
-
   return res.data.data;
-
 };
 
 const formatDate = (dateStr) => {
