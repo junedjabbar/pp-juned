@@ -52,20 +52,14 @@ const formatDate = (dateStr) => {
 
 const getDealsHtml = (products, settings) => {
 
-  const { affiliateTag, product1, product2, product3 } = settings
+  const { affiliateTag } = settings
 
   // Filter products based on product1, product2, product3 if defined
-  let filteredProducts = [];
-  if (product1 || product2 || product3) {
-    const idsToMatch = [product1, product2, product3].filter(Boolean);
-    filteredProducts = products.filter((p) => idsToMatch.includes(p.productId));
-  } else {
-    filteredProducts = products.slice(0, 20);
-  }
+  let filteredProducts = products.slice(0, 20);
 
   const productRows = [];
-  for (let i = 0; i < filteredProducts.length; i += 4) {
-    productRows.push(...filteredProducts.slice(i, i + 4));
+  for (let i = 0; i < filteredProducts.length; i += 3) {
+    productRows.push(...filteredProducts.slice(i, i + 3));
   }
 
   return `
@@ -181,7 +175,7 @@ app.post('/categories', async (request, response) => {
   const output = res.data && res.data.data && res.data.data.map(item => {
     return { label: item, value: item };
   })
-  
+
   return response.json({
     code: 200,
     data: output || []
