@@ -151,13 +151,13 @@ const getDealsHtml2 = (products, settings) => {
   <td align="center" style="padding: 20px 10px; background: ${titleBackgroundColor};">
     <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center">
       <tr>
-        <td style="vertical-align: middle; padding-right: 30px;">
-          <img src="https://res.cloudinary.com/dh5pf5on1/image/upload/v1746541456/temp/ajfnbz1ejntpjbkyqfaj.png" alt="Brand Logo" style="width: 130px;height: 35px; display: block;" />
-        </td>
         <td style="vertical-align: middle;">
           <span style="font-size: 25px; color: ${titleFontColor};">
-            Powered by DataDyn.co
+            Powered by
           </span>
+        </td>
+        <td style="vertical-align: middle; padding-left: 30px;">
+          <img src="https://res.cloudinary.com/dh5pf5on1/image/upload/v1746541456/temp/ajfnbz1ejntpjbkyqfaj.png" alt="Brand Logo" style="width: 130px;height: 35px; display: block;" />
         </td>
       </tr>
     </table>
