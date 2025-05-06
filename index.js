@@ -56,6 +56,119 @@ const formatDate = (dateStr) => {
   });
 };
 
+const getDealsHtml2 = (products, settings) => {
+  const {
+    affiliateTag,
+    titleLine1 = '',
+    titleLine2 = '',
+    titleFontSize = '18px',
+    titleFontColor = '#6366f1',
+    titleFontStyle = 'italic',
+    titleBackgroundColor = '#c2c2f7',
+    productTitleColor = '#6366f1',
+    productTitleSize = '14px',
+    buttonBackground = '#6366f1',
+    buttonStyle = 'solid',
+    buttonTextColor ,
+    maxTitleLength = 45,
+  } = settings;
+
+  const isOutline = buttonStyle === 'outline';
+  const finalButtonBackground = isOutline ? 'transparent' : buttonBackground;
+  const finalButtonBorder = isOutline ? `1px solid ${buttonBackground}` : 'none';
+  const finalButtonTextColor = isOutline
+      ? (buttonTextColor || buttonBackground)
+      : (buttonTextColor || '#ffffff');
+
+  const filteredProducts = products.slice(0, 20);
+
+  const truncate = (text, length) =>
+      text.length > length ? text.substring(0, length).trim() + '...' : text;
+
+  const productHtml = [];
+  for (let i = 0; i < filteredProducts.length; i += 3) {
+    const rowItems = filteredProducts.slice(i, i + 3).map(product => {
+      const {
+        title = product?.title,
+        image = product?.image,
+        url
+      } = product;
+
+      const link = affiliateTag ? url.replace('getpoln-20', affiliateTag) : url;
+      const displayTitle = truncate(title, maxTitleLength);
+
+      return `
+        <td class="column" width="33.33%" style="padding: 10px; text-align: center;">
+          <img src="${image}" alt="${title}" width="280" height="310" style="width: 280px; height: 310px; object-fit: cover; display: block; margin: auto;">
+          <p class="product-title" style="max-width: 180px; font-size: ${productTitleSize}; font-weight: bold; margin: 15px auto 10px; color: ${productTitleColor}; word-wrap: break-word; overflow-wrap: break-word;">
+            ${displayTitle}
+          </p>
+          <a href="${link}" style="width: 70%; display: inline-block; padding: 10px 20px; border: ${finalButtonBorder}; background: ${finalButtonBackground}; text-decoration: none; color: ${finalButtonTextColor}; font-weight: bold;">
+            SHOP NOW
+          </a>
+        </td>
+      `;
+    }).join('');
+
+    productHtml.push(`<tr>${rowItems}</tr>`);
+  }
+
+  return `
+  </head>
+    <style>
+      @media (max-width: 600px) {
+        .column {
+          display: block !important;
+          width: 100% !important;
+          max-width: 100% !important;
+        }
+        .product-title {
+          max-width: 100% !important;
+        }
+      }
+    </style>
+  </head>
+  <body style="Margin:0;padding:0;background-color:#ffffff;font-family:Arial,sans-serif;">
+    <table role="presentation" width="80%" border="0" cellspacing="0" cellpadding="0" style="margin: auto;">
+      ${
+      (titleLine1 || titleLine2) &&
+      `<tr>
+          <td align="center" style="padding: 20px 10px; background: ${titleBackgroundColor};">
+            ${titleLine1 ? `<h2 style="margin: 0; font-size: ${titleFontSize}; color: ${titleFontColor}; font-style: ${titleFontStyle};">${titleLine1}</h2>` : ''}
+            ${titleLine2 ? `<h2 style="margin: 0; font-size: ${titleFontSize}; color: ${titleFontColor}; font-style: ${titleFontStyle};">${titleLine2}</h2>` : ''}
+          </td>
+        </tr>`
+  }
+      <tr>
+        <td align="center" style="padding: 20px 0;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+            ${productHtml.join('')}
+          </table>
+        </td>
+      </tr>
+      <br/>
+      <tr>
+  <td align="center" style="padding: 20px 10px; background: ${titleBackgroundColor};">
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" align="center">
+      <tr>
+        <td style="vertical-align: middle; padding-right: 30px;">
+          <img src="https://res.cloudinary.com/dh5pf5on1/image/upload/v1746541456/temp/ajfnbz1ejntpjbkyqfaj.png" alt="Brand Logo" style="width: 130px;height: 35px; display: block;" />
+        </td>
+        <td style="vertical-align: middle;">
+          <span style="font-size: 25px; color: ${titleFontColor};">
+            Powered by DataDyn.co
+          </span>
+        </td>
+      </tr>
+    </table>
+  </td>
+</tr>
+    </table>
+  </body>
+  </html>
+  `;
+};
+
 const getDealsHtml = (products, settings) => {
 
   const { affiliateTag } = settings
@@ -216,7 +329,7 @@ app.post('/kit', async (request, response) => {
 
   const products = await getDeals(settings);
 
-  const html = getDealsHtml(products, settings); // Show first 6 products
+  const html = getDealsHtml2(products, settings); // Show first 6 products
 
   return response.json({
     code: 200,
