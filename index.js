@@ -21,19 +21,21 @@ const getUrl = () => {
 
 const getDeals = async (settings) => {
   const { category, search, product1, product2, product3 } = settings;
+
   let url = `${getUrl()}/crm/deals?categories=Adult+Clothing%2C+Shoes+%26+Accessories&offset=0&limit=10`;
 
-  if (search !== '') {
+  if (search?.trim()) {
     url = `${getUrl()}/crm/deals?search=${encodeURIComponent(search)}&offset=0&limit=10`;
-  } else if (category !== '') {
+  } else if (category?.trim()) {
     url = `${getUrl()}/crm/deals?categories=${encodeURIComponent(category)}&offset=0&limit=10`;
-  } else if (product1 !== '' || product2 !== '' || product3 !== '') {
-    console.log(`Making product api call`)
+  } else {
     const idsToMatch = [product1, product2, product3].filter(Boolean);
-    url = `${getUrl()}/crm/deals?asin=${encodeURIComponent(idsToMatch)}`;
+    if (idsToMatch.length > 0) {
+      url = `${getUrl()}/crm/deals?asin=${encodeURIComponent(idsToMatch)}&offset=0&limit=10`;
+    }
   }
 
-  console.log(`Making api call [${url}]`)
+  console.log(`Making api call [${url}]`);
 
   const res = await axios.get(url);
   return res.data.data;
