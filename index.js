@@ -9,7 +9,21 @@ app.use(express.json())
 
 const logger = console
 
-const getUrl = () => {
+function safeStringify(obj) {
+  const seen = new Set()
+  return JSON.stringify(obj, (key, value) => {
+    if (typeof value === 'object' && value !== null) {
+      if (seen.has(value)) {
+        return '[Circular]'
+      }
+      seen.add(value)
+    }
+
+    return value
+  }, 3)
+}
+
+function getUrl() {
   // if (process.env.PB_PROFILE === 'local') {
   //   return 'http://localhost:3002/a'
   // } else if (process.env.PB_PROFILE === 'prod') {
@@ -37,15 +51,6 @@ const getDeals = async (settings) => {
 
   const res = await axios.get(url);
   return res.data.data;
-};
-
-const formatDate = (dateStr) => {
-  const date = new Date(dateStr);
-  return date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  });
 };
 
 const getDealsHtml2 = (products, settings) => {
@@ -205,6 +210,31 @@ app.post('/search', async (request, response) => {
   console.log(`Returning results: [${JSON.stringify(results)}]`)
   return response.json({ code: 200, data: results })
 })
+
+app.post('/dealslist', async (request, response) => {
+  console.log(`Request received for dealslist [${safeStringify(request)}]`)
+  
+  const search = request.body.search;
+
+  console.log('Request: ', search);
+
+  return response.json({ code: 200, data: [{ label: 'Clear Selection', value: 'Clear' }, { label: 'Creatine Gummies', value: 'gummies' }] })
+})
+
+app.post('/deals', async (request, response) => {
+  const settings = request.body.settings;
+
+  logger.info(`Received request to getDeals with params [${JSON.stringify(settings)}]`);
+
+  const products = await getDeals(settings);
+
+  const html = getDealsHtml2(products, settings); // Show first 6 products
+
+  return response.json({
+    code: 200,
+    html
+  });
+});
 
 app.post('/kit', async (request, response) => {
   const settings = request.body.settings;
