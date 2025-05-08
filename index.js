@@ -216,7 +216,7 @@ app.post('/dealslist', async (request, response) => {
 
   const authHeader = request.headers;
 
-  console.log(`AuthHeader is: ${authHeader}`)
+  console.log(`AuthHeader is: ${JSON.stringify(authHeader)}`)
 
   console.log(`Raw Header is: ${request.rawHeaders}`)
   
