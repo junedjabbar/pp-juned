@@ -212,7 +212,7 @@ app.post('/search', async (request, response) => {
 })
 
 app.post('/dealslist', async (request, response) => {
-  console.log(`Request received for dealslist [${safeStringify(request)}]`)
+  console.log(`Request received for dealslist: [${safeStringify(request)}]`)
   
   const search = request.body.search;
 
