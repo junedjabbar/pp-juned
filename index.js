@@ -213,6 +213,10 @@ app.post('/search', async (request, response) => {
 
 app.post('/dealslist', async (request, response) => {
   console.log(`Request received for dealslist: [${safeStringify(request)}]`)
+
+  const authHeader = req.headers.authorization || "";
+
+  console.log(`AuthHeader is: ${authHeader}`)
   
   const search = request.body.search;
 
