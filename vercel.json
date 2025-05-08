@@ -9,12 +9,9 @@
     "routes": [
         {
             "src": "/(.*)",
-            "headers": [
-                {
-                    "key": "Authorization",
-                    "value": "*"
-                }
-            ],
+            "headers": {
+                "Authorization": "*"
+            },
             "dest": "index.js"
         }
     ]
