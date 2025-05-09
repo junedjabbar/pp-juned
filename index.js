@@ -35,7 +35,7 @@ function getUrl() {
 
 const data = [
   {
-      "Electronics & Smart Tech": [
+      "May Electronics & Smart Tech": [
           {
               "path": "|172282|493964|10048700011|7939901011|",
               "productId": "B0CSSQZ5K4",
