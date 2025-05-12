@@ -237,7 +237,6 @@ const getDeals = async (settings) => {
 };
 
 const getDealsHtml2 = (products, settings) => {
-    console.log("------products: ",products)
     const {
         affiliateTag,
         titleLine1 = '',
@@ -285,7 +284,7 @@ const getDealsHtml2 = (products, settings) => {
             return `
         <td class="column" width="33.33%" style="padding: 10px; text-align: center;">
           <div style="background: ${cardBackgroundColor}; padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-            <img src="${image}" alt="${title}" width="280" height="310" style="width: 280px; height: 310px; object-fit: cover; display: block; margin: auto; border-radius: 6px;">
+            <img src="${image}" alt="${title}" width="280" height="310" style="width: 280px; height: 310px; display: block; margin: auto; border-radius: 6px;">
             <p style="color: ${discountColor || 'red'}; font-weight: 900; margin: 10px 0; font-size: ${discountFontSize || '22px'};">
               ${percentageOff}% OFF
             </p>
