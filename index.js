@@ -26,11 +26,8 @@ function safeStringify(obj) {
 function getUrl() {
     // if (process.env.PB_PROFILE === 'local') {
     //   return 'http://localhost:3002/a'
-    // } else if (process.env.PB_PROFILE === 'prod') {
-    //   return 'https://site-api.getpoln.com'
     // }
-
-    return 'https://qa-site-api.getpoln.com'
+    return 'https://api.getpoln.com'
 }
 
 const data = [
@@ -216,25 +213,17 @@ const data = [
     }
 ]
 
-const getDeals = async (settings) => {
-    const { category, search, product1, product2, product3 } = settings;
+const executeApiCall = async (token, url) => {
+    const finalUrl = `${getUrl()}${url}`
+    const res = await axios.get(finalUrl, {
+        headers: {
+            'Authorization': token
+        },
+    });
 
-    let url = `${getUrl()}/crm/deals?categories=Adult+Clothing%2C+Shoes+%26+Accessories&offset=0&limit=10`;
 
-    const idsToMatch = [product1, product2, product3].filter(Boolean);
-    if (idsToMatch.length > 0) {
-        url = `${getUrl()}/crm/deals?asin=${encodeURIComponent(idsToMatch)}&offset=0&limit=10`;
-    } else if (search?.trim() && search !== 'Clear') {
-        url = `${getUrl()}/crm/deals?search=${encodeURIComponent(search)}&offset=0&limit=10`;
-    } else if (category?.trim() && category !== 'Clear') {
-        url = `${getUrl()}/crm/deals?categories=${encodeURIComponent(category)}&offset=0&limit=10`;
-    }
-
-    console.log(`Making api call [${url}]`);
-
-    const res = await axios.get(url);
-    return res.data.data;
-};
+    return res.data
+}
 
 const getDealsHtml2 = (products, settings) => {
     const {
@@ -344,64 +333,11 @@ const getDealsHtml2 = (products, settings) => {
   `
 };
 
-
-function cleanText(text) {
-    return text
-        .replace(/^Title:\s*/, '') // remove 'Title:'
-        .replace(/[^\w\s]/g, '')   // remove special characters (except letters, numbers, spaces)
-        .replace(/\s+/g, ' ')      // normalize whitespace
-        .trim()
-        .split(' ')                       // split into words
-        .slice(0, 5)                     // take first 5
-        .join(' ');
-}
-
-app.post('/categories', async (request, response) => {
-    const url = `${getUrl()}/crm/categories`
-
-    const res = await axios.get(url);
-    const output = []
-
-    if (res.data && res.data.data) {
-        res.data.data.forEach(item => {
-            output.push({ label: item, value: item })
-        })
-    }
-
-    output.unshift({ label: 'Clear Selection', value: 'Clear' })
-
-    return response.json({
-        code: 200,
-        data: output
-    })
-})
-
-app.post('/search', async (request, response) => {
-    const search = request.body.search;
-
-    console.log('Request: ', search);
-
-    if (search === '') {
-        return response.json({ code: 200, data: [{ label: 'Clear Selection', value: 'Clear' }, { label: 'Creatine Gummies', value: 'gummies' }] });
-    }
-
-    const url = `${getUrl()}/crm/searchTerm?search=${encodeURIComponent(search)}`
-
-    const res = await axios.get(url);
-    const results = []
-    results.push(...res.data?.data?.splice(0, 5)) || []
-    results.forEach(r => {
-        r.label = cleanText(r.label)
-        r.value = cleanText(r.label)
-    })
-
-    results.unshift({ label: 'Clear Selection', value: 'Clear' })
-    console.log(`Returning results: [${JSON.stringify(results)}]`)
-    return response.json({ code: 200, data: results })
-})
-
 app.post('/dealslist', async (request, response) => {
+    const settings = request.body.settings;
     console.log(`Request received for dealslist: [${safeStringify(request)}]`)
+
+    const { key } = settings;
 
     const authHeader = request.headers;
 
@@ -409,15 +345,17 @@ app.post('/dealslist', async (request, response) => {
 
     console.log(`Raw Header is: ${request.rawHeaders}`)
 
-    const search = request.body.search;
+    const apiResponse = await executeApiCall(key, '/creator/lists')
 
-    console.log('Request: ', search);
+    const output = []
 
-    return response.json({ code: 200, data: [
-            { label: 'May Electronics & Smart Tech', value: 'May Electronics & Smart Tech' },
-            { label: 'May Beauty & Skincare', value: 'May Beauty & Skincare' },
-            { label: 'Summer Clothing', value: 'Summer Clothing' }
-        ]})
+    if (apiResponse.lists && apiResponse.lists.length) {
+        apiResponse.lists.forEach(i => {
+            output.push({ label: i.listName, value: i.listName})
+        })
+    }
+
+    return response.json({ code: 200, data: output})
 })
 
 app.post('/deals', async (request, response) => {
@@ -425,28 +363,18 @@ app.post('/deals', async (request, response) => {
 
     logger.info(`Received request to getDeals with params [${JSON.stringify(settings)}]`);
 
-    const { list } = settings;
+    const { list, key } = settings;
 
-    const dealProducts = data.find(d => d[list])[list]
+    const url = `/creator/lists/${list}`
+
+    const apiResponse = await executeApiCall(key, url)
+
+    const dealProducts = apiResponse.products
+    // data.find(d => d[list])[list]
 
     // const products = await getDeals(settings);
 
     const html = getDealsHtml2(dealProducts, settings); // Show first 6 products
-
-    return response.json({
-        code: 200,
-        html
-    });
-});
-
-app.post('/kit', async (request, response) => {
-    const settings = request.body.settings;
-
-    logger.info(`Received request to getDeals with params [${JSON.stringify(settings)}]`);
-
-    const products = await getDeals(settings);
-
-    const html = getDealsHtml2(products, settings); // Show first 6 products
 
     return response.json({
         code: 200,
