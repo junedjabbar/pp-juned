@@ -229,7 +229,6 @@ const getDealsHtml2 = (products, settings) => {
   const {
     affiliateTag,
     titleLine1 = '',
-    titleLine2 = '',
     titleFontSize = '18px',
     titleFontColor = '#000000',
     titleFontStyle = 'italic',
@@ -240,7 +239,6 @@ const getDealsHtml2 = (products, settings) => {
     buttonStyle = 'solid',
     buttonTextColor,
     cardBackgroundColor = '#ffffff',
-    maxTitleLength = 40,
     discountColor = 'red',
     discountFontSize = '14px',
     imageBackgroundColor = '',
@@ -248,6 +246,7 @@ const getDealsHtml2 = (products, settings) => {
     descriptionFontFamily = 'Arial, sans-serif',
     discountFontFamily = 'Arial, sans-serif',
     buttonFontFamily = 'Arial, sans-serif',
+    buttonFontSize = '12px',           // New setting for button font size
     buttonText = 'SHOP NOW'
   } = settings;
 
@@ -295,14 +294,14 @@ const getDealsHtml2 = (products, settings) => {
             <a href="${link}" style="
                 font-family: ${buttonFontFamily};
                 display: inline-block;
-                padding: 4px 10px;          /* smaller padding */
+                padding: 4px 10px;
                 border: ${finalButtonBorder};
                 background: ${finalButtonBackground};
                 text-decoration: none;
                 color: ${finalButtonTextColor};
                 font-weight: bold;
                 border-radius: 5px;
-                font-size: 12px;            /* smaller font size */
+                font-size: ${buttonFontSize};
               ">
                 ${buttonText}
               </a>
@@ -334,14 +333,11 @@ const getDealsHtml2 = (products, settings) => {
       }
     </style>
     <table role="presentation" width="90%" border="0" cellspacing="0" cellpadding="0" style="margin: auto;">
-      ${(titleLine1 || titleLine2) &&
-    `<tr>
+      ${titleLine1 && `<tr>
         <td align="center" style="padding: 20px 10px; background: ${titleBackgroundColor};">
-          ${titleLine1 ? `<h2 style="margin: 0; font-size: ${titleFontSize}; color: ${titleFontColor}; font-style: ${titleFontStyle}; font-family: ${headerFontFamily};">${titleLine1}</h2>` : ''}
-          ${titleLine2 ? `<h2 style="margin: 0; font-size: ${titleFontSize}; color: ${titleFontColor}; font-style: ${titleFontStyle}; font-family: ${headerFontFamily};">${titleLine2}</h2>` : ''}
+          <h2 style="margin: 0; font-size: ${titleFontSize}; color: ${titleFontColor}; font-style: ${titleFontStyle}; font-family: ${headerFontFamily};">${titleLine1}</h2>
         </td>
-      </tr>`
-    }
+      </tr>`}
       <tr>
         <td align="center" style="padding: 20px 0;">
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
