@@ -288,9 +288,20 @@ const getDealsHtml2 = (products, settings) => {
             <p style="font-size: ${productTitleSize}; color: ${productTitleColor}; font-weight: bold; font-family: ${descriptionFontFamily}; margin: 12px auto 8px; max-width: 180px; word-wrap: break-word;">
               ${displayTitle}
             </p>
-            <a href="${link}" style="font-family: ${buttonFontFamily}; display: inline-block; padding: 8px 16px; border: ${finalButtonBorder}; background: ${finalButtonBackground}; text-decoration: none; color: ${finalButtonTextColor}; font-weight: bold; border-radius: 5px;">
-              ${buttonText}
-            </a>
+            <a href="${link}" style="
+                font-family: ${buttonFontFamily};
+                display: inline-block;
+                padding: 4px 10px;          /* smaller padding */
+                border: ${finalButtonBorder};
+                background: ${finalButtonBackground};
+                text-decoration: none;
+                color: ${finalButtonTextColor};
+                font-weight: bold;
+                border-radius: 5px;
+                font-size: 12px;            /* smaller font size */
+              ">
+                ${buttonText}
+              </a>
           </div>
         </td>
       `;
