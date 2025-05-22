@@ -412,7 +412,7 @@ app.post('/dealslist', async (request, response) => {
       output.push({ label: i.listName, value: i.listName })
     })
   } else {
-    output.push({ label: 'Empty List', value: '' });
+    output.push({ label: 'Empty List', value: 'Empty List' });
   }
 
   return response.json({ code: 200, data: output })
