@@ -214,15 +214,18 @@ const data = [
 ]
 
 const executeApiCall = async (token, url) => {
-  const finalUrl = `${getUrl()}${url}`
-  const res = await axios.get(finalUrl, {
-    headers: {
-      'Authorization': token
-    },
-  });
-
-
-  return res.data
+  try {
+    const finalUrl = `${getUrl()}${url}`
+    const res = await axios.get(finalUrl, {
+      headers: {
+        'Authorization': token
+      },
+    });
+    return res.data
+  } catch (e) {
+    logger.info(`An exception ocurred while making api call:`, e)
+  }
+  return {}
 }
 
 const getDealsHtml2 = (products, settings) => {
@@ -401,10 +404,11 @@ app.post('/dealslist', async (request, response) => {
 
   const apiResponse = await executeApiCall(key, '/creator/lists')
 
+  const apiList = apiResponse?.list || []
   const output = []
 
-  if (apiResponse.lists && apiResponse.lists.length) {
-    apiResponse.lists.forEach(i => {
+  if (apiList && apiList?.length) {
+    apiList.forEach(i => {
       output.push({ label: i.listName, value: i.listName })
     })
   } else {
