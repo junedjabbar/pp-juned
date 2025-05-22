@@ -280,7 +280,7 @@ const getDealsHtml2 = (products, settings) => {
         <td width="33.33%" style="padding: 10px; text-align: center;">
           <div style="background: ${cardBackgroundColor}; padding: 12px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); position: relative;">
             <div style="position: relative; background: ${imageBackgroundColor || 'transparent'}; border-radius: 4px;">
-              <img src="${image}" alt="${title}" width="200" height="240" style="width: 200px; height: 240px; display: block; margin: auto; border-radius: 6px;">
+              <img src="${image}" alt="${title}" class="datadyno-img" />
               <div style="position: absolute; top: 8px; right: 8px; background: ${discountColor}; color: white; font-size: ${discountFontSize}; font-family: ${discountFontFamily}; padding: 2px 6px; border-radius: 3px; font-weight: bold;">
                 ${percentageOff}% OFF
               </div>
@@ -306,6 +306,19 @@ const getDealsHtml2 = (products, settings) => {
 
   return `
   <body style="Margin:0;padding:0;background-color:#ffffff;font-family:${headerFontFamily};">
+    <style>
+      img.datadyno-img {
+        width: 100% !important;
+        max-width: 100% !important;
+        height: auto !important;
+        display: block !important;
+        margin: auto !important;
+        object-fit: contain !important;
+        border-radius: 6px !important;
+        background-color: #fff !important;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08) !important;
+      }
+    </style>
     <table role="presentation" width="90%" border="0" cellspacing="0" cellpadding="0" style="margin: auto;">
       ${(titleLine1 || titleLine2) &&
     `<tr>
@@ -314,7 +327,7 @@ const getDealsHtml2 = (products, settings) => {
           ${titleLine2 ? `<h2 style="margin: 0; font-size: ${titleFontSize}; color: ${titleFontColor}; font-style: ${titleFontStyle}; font-family: ${headerFontFamily};">${titleLine2}</h2>` : ''}
         </td>
       </tr>`
-    }
+  }
       <tr>
         <td align="center" style="padding: 20px 0;">
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
@@ -344,6 +357,7 @@ const getDealsHtml2 = (products, settings) => {
   </body>
   `;
 };
+
 
 
 app.post('/dealslist', async (request, response) => {
