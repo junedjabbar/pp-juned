@@ -289,16 +289,7 @@ const getDealsHtml2 = (products, settings) => {
                 ${percentageOff}% OFF
               </div>
             </div>
-            <p style="
-              font-size: ${productTitleSize};
-              color: ${productTitleColor};
-              font-weight: bold;
-              font-family: ${descriptionFontFamily};
-              margin: 12px auto 8px;
-              max-width: 180px;
-              word-wrap: break-word;
-              text-align: justify;
-            ">
+            <p style="font-size: ${productTitleSize}; color: ${productTitleColor}; font-weight: bold; font-family: ${descriptionFontFamily}; margin: 12px auto 8px; max-width: 180px; word-wrap: break-word;">
               ${displayTitle}
             </p>
             <a href="${link}" style="
