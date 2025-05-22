@@ -308,11 +308,10 @@ const getDealsHtml2 = (products, settings) => {
   <body style="Margin:0;padding:0;background-color:#ffffff;font-family:${headerFontFamily};">
     <style>
       img.datadyno-img {
-        width: 100% !important;
-        max-width: 100% !important;
-        height: auto !important;
+        width: 119px !important;
+        height: 122px !important;
         display: block !important;
-        margin: auto !important;
+        margin: 0 auto !important;
         object-fit: contain !important;
         border-radius: 6px !important;
         background-color: #fff !important;
@@ -337,28 +336,26 @@ const getDealsHtml2 = (products, settings) => {
       </tr>
       <tr>
         <td align="center" style="padding: 30px 10px;">
-          <a href="https://datadyno.co/user/deals" target="_blank" style="text-decoration: none; display: inline-block;">
-            <table role="presentation" cellpadding="0" cellspacing="0" border="0">
-              <tr>
-                <td style="vertical-align: middle;">
-                  <span style="font-size: 18px; color: ${titleFontColor}; font-family: ${headerFontFamily}; margin-right: 10px">
-                    Powered by
-                  </span>
-                </td>
-                <td style="vertical-align: middle;">
-                  <img src="https://res.cloudinary.com/dh5pf5on1/image/upload/v1747049158/temp/hff1b0ossms0dvgofjkz.png" alt="Brand Logo" style="width: 130px;height: 35px; display: block;" />
-                </td>
-              </tr>
-            </table>
-          </a>
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin: auto;">
+            <tr>
+              <td style="vertical-align: middle; padding-right: 10px;">
+                <span style="font-size: 18px; color: ${titleFontColor}; font-family: ${headerFontFamily};">
+                  Powered by
+                </span>
+              </td>
+              <td style="vertical-align: middle;">
+                <a href="https://datadyno.co/user/deals" target="_blank" style="display: inline-block; text-decoration: none;">
+                  <img src="https://res.cloudinary.com/dh5pf5on1/image/upload/v1747049158/temp/hff1b0ossms0dvgofjkz.png" alt="Brand Logo" style="width: 130px; height: 35px; display: block; border: 0;" />
+                </a>
+              </td>
+            </tr>
+          </table>
         </td>
       </tr>
     </table>
   </body>
   `;
 };
-
-
 
 app.post('/dealslist', async (request, response) => {
   const { key, search } = request.body;
