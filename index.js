@@ -350,7 +350,7 @@ const getDealsHtml2 = (products, settings) => {
           <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin: auto;">
             <tr>
               <td style="vertical-align: middle; padding-right: 10px;">
-                <span style="font-size: 18px; color: ${titleFontColor}; font-family: ${headerFontFamily};">
+                <span style="font-size: 18px;">
                   Powered by
                 </span>
               </td>
