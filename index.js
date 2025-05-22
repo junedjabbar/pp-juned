@@ -229,29 +229,46 @@ const getDealsHtml2 = (products, settings) => {
   const {
     affiliateTag,
     titleLine1 = '',
-    titleFontSize = '18px',
+    titleFontSize = '18px', // keep size if you want or remove if not used
     titleFontColor = '#000000',
     titleFontStyle = 'italic',
-    titleFontWeight = 'normal',
-    titleFontFamily = 'Arial, sans-serif',
+
+    // fontFamily now object: { fontFamily, fontWeight }
+    titleFontFamily = { fontFamily: 'Arial, sans-serif', fontWeight: 'normal' },
+
     productTitleColor = '#6366f1',
-    productTitleSize = '14px',
-    productTitleFontWeight = 'bold',
-    productTitleFontFamily = 'Arial, sans-serif',
+    productTitleSize = '14px', // can remove if unused
+    productTitleFontFamily = { fontFamily: 'Arial, sans-serif', fontWeight: 'bold' },
+
     buttonBackground = '#6366f1',
     buttonStyle = 'solid',
     buttonTextColor,
-    buttonFontSize = '12px',
-    buttonFontFamily = 'Arial, sans-serif',
-    buttonFontWeight = 'bold',
+    buttonFontSize = '12px', // can remove if unused
+    buttonFontFamily = { fontFamily: 'Arial, sans-serif', fontWeight: 'bold' },
+
     cardBackgroundColor = '#ffffff',
     discountColor = 'red',
-    discountFontSize = '14px',
-    discountFontFamily = 'Arial, sans-serif',
-    discountFontWeight = 'bold',
+    discountFontSize = '14px', // can remove if unused
+    discountFontFamily = { fontFamily: 'Arial, sans-serif', fontWeight: 'bold' },
+
     imageBackgroundColor = '',
-    bodyBackgroundColor = '#ffffff'
+    bodyBackgroundColor = '#ffffff',
+
+    buttonText = 'SHOP NOW'
   } = settings;
+
+  // Extract font-family and font-weight for title, product title, button, discount
+  const titleFontFamilyStr = titleFontFamily.fontFamily || 'Arial, sans-serif';
+  const titleFontWeightStr = titleFontFamily.fontWeight || 'normal';
+
+  const productTitleFontFamilyStr = productTitleFontFamily.fontFamily || 'Arial, sans-serif';
+  const productTitleFontWeightStr = productTitleFontFamily.fontWeight || 'bold';
+
+  const buttonFontFamilyStr = buttonFontFamily.fontFamily || 'Arial, sans-serif';
+  const buttonFontWeightStr = buttonFontFamily.fontWeight || 'bold';
+
+  const discountFontFamilyStr = discountFontFamily.fontFamily || 'Arial, sans-serif';
+  const discountFontWeightStr = discountFontFamily.fontWeight || 'bold';
 
   const isOutline = buttonStyle === 'outline';
   const finalButtonBackground = isOutline ? 'transparent' : buttonBackground;
@@ -286,16 +303,16 @@ const getDealsHtml2 = (products, settings) => {
           <div style="background: ${cardBackgroundColor}; padding: 12px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); position: relative;">
             <div style="position: relative; background: ${imageBackgroundColor || 'transparent'}; border-radius: 4px;">
               <img src="${image}" alt="${title}" class="datadyno-img" />
-              <div style="position: absolute; top: 8px; right: 8px; background: ${discountColor}; color: white; font-size: ${discountFontSize}; font-family: ${discountFontFamily}; font-weight: ${discountFontWeight}; padding: 2px 6px; border-radius: 3px;">
+              <div style="position: absolute; top: 8px; right: 8px; background: ${discountColor}; color: white; font-size: ${discountFontSize}; font-family: ${discountFontFamilyStr}; font-weight: ${discountFontWeightStr}; padding: 2px 6px; border-radius: 3px;">
                 ${percentageOff}% OFF
               </div>
             </div>
-            <p style="font-size: ${productTitleSize}; color: ${productTitleColor}; font-weight: ${productTitleFontWeight}; font-family: ${productTitleFontFamily}; margin: 12px auto 8px; max-width: 180px; word-wrap: break-word;">
+            <p style="font-size: ${productTitleSize}; color: ${productTitleColor}; font-weight: ${productTitleFontWeightStr}; font-family: ${productTitleFontFamilyStr}; margin: 12px auto 8px; max-width: 180px; word-wrap: break-word;">
               ${displayTitle}
             </p>
             <a href="${link}" style="
-                font-family: ${buttonFontFamily};
-                font-weight: ${buttonFontWeight};
+                font-family: ${buttonFontFamilyStr};
+                font-weight: ${buttonFontWeightStr};
                 display: inline-block;
                 padding: 4px 10px;
                 border: ${finalButtonBorder};
@@ -305,7 +322,7 @@ const getDealsHtml2 = (products, settings) => {
                 border-radius: 5px;
                 font-size: ${buttonFontSize};
               ">
-                ${settings.buttonText || 'SHOP NOW'}
+                ${buttonText}
               </a>
           </div>
         </td>
@@ -334,10 +351,10 @@ const getDealsHtml2 = (products, settings) => {
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08) !important;
       }
     </style>
-    <table role="presentation" width="90%" border="0" cellspacing="0" cellpadding="0" style="margin: auto; font-family: ${titleFontFamily}; font-weight: ${titleFontWeight};">
+    <table role="presentation" width="90%" border="0" cellspacing="0" cellpadding="0" style="margin: auto; font-family: ${titleFontFamilyStr}; font-weight: ${titleFontWeightStr};">
       ${titleLine1 && `<tr>
         <td align="center" style="padding: 20px 10px; background: ${titleBackgroundColor};">
-          <h2 style="margin: 0; font-size: ${titleFontSize}; color: ${titleFontColor}; font-style: ${titleFontStyle}; font-weight: ${titleFontWeight}; font-family: ${titleFontFamily};">${titleLine1}</h2>
+          <h2 style="margin: 0; font-size: ${titleFontSize}; color: ${titleFontColor}; font-style: ${titleFontStyle}; font-weight: ${titleFontWeightStr}; font-family: ${titleFontFamilyStr};">${titleLine1}</h2>
         </td>
       </tr>`}
       <tr>
@@ -358,7 +375,7 @@ const getDealsHtml2 = (products, settings) => {
               </td>
               <td style="vertical-align: middle;">
                 <a href="https://datadyno.co/user/deals" target="_blank" style="display: inline-block; text-decoration: none;">
-                  <img src="https://res.cloudinary.com/dh5pf5on1/image/upload/v1747049158/temp/hff1b0ossms0dvgofjkz.png" alt="DataDyno" style="width: 130px; height: 35px; display: block; border: 0;" />
+                  <img src="https://res.cloudinary.com/dh5pf5on1/image/upload/v1747049158/temp/hff1b0ossms0dvgofjkz.png" alt="Brand Logo" style="width: 130px; height: 35px; display: block; border: 0;" />
                 </a>
               </td>
             </tr>
