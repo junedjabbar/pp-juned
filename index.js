@@ -232,22 +232,25 @@ const getDealsHtml2 = (products, settings) => {
     titleFontSize = '18px',
     titleFontColor = '#000000',
     titleFontStyle = 'italic',
-    titleBackgroundColor = '#c2c2f7',
+    titleFontWeight = 'normal',
+    titleFontFamily = 'Arial, sans-serif',
     productTitleColor = '#6366f1',
     productTitleSize = '14px',
+    productTitleFontWeight = 'bold',
+    productTitleFontFamily = 'Arial, sans-serif',
     buttonBackground = '#6366f1',
     buttonStyle = 'solid',
     buttonTextColor,
+    buttonFontSize = '12px',
+    buttonFontFamily = 'Arial, sans-serif',
+    buttonFontWeight = 'bold',
     cardBackgroundColor = '#ffffff',
     discountColor = 'red',
     discountFontSize = '14px',
-    imageBackgroundColor = '',
-    headerFontFamily = 'Arial, sans-serif',
-    descriptionFontFamily = 'Arial, sans-serif',
     discountFontFamily = 'Arial, sans-serif',
-    buttonFontFamily = 'Arial, sans-serif',
-    buttonFontSize = '12px',           // New setting for button font size
-    buttonText = 'SHOP NOW'
+    discountFontWeight = 'bold',
+    imageBackgroundColor = '',
+    bodyBackgroundColor = '#ffffff'
   } = settings;
 
   const isOutline = buttonStyle === 'outline';
@@ -258,14 +261,13 @@ const getDealsHtml2 = (products, settings) => {
     : (buttonTextColor || '#ffffff');
 
   const truncate = (text, fontSizePx = 14, containerWidthPx = 180, lines = 2) => {
-    const avgCharWidth = fontSizePx * 0.5; // Approximate average char width in px
+    const avgCharWidth = fontSizePx * 0.5;
     const maxChars = Math.floor((containerWidthPx / avgCharWidth) * lines);
     if (text.length <= maxChars) return text;
     return text.substring(0, maxChars - 3).trim() + '...';
   };
 
-  const filteredProducts = products.slice(0, 9); // Max 3x3
-
+  const filteredProducts = products.slice(0, 9);
   const rows = [];
   for (let i = 0; i < filteredProducts.length; i += 3) {
     const rowItems = filteredProducts.slice(i, i + 3).map(product => {
@@ -284,26 +286,26 @@ const getDealsHtml2 = (products, settings) => {
           <div style="background: ${cardBackgroundColor}; padding: 12px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); position: relative;">
             <div style="position: relative; background: ${imageBackgroundColor || 'transparent'}; border-radius: 4px;">
               <img src="${image}" alt="${title}" class="datadyno-img" />
-              <div style="position: absolute; top: 8px; right: 8px; background: ${discountColor}; color: white; font-size: ${discountFontSize}; font-family: ${discountFontFamily}; padding: 2px 6px; border-radius: 3px; font-weight: bold;">
+              <div style="position: absolute; top: 8px; right: 8px; background: ${discountColor}; color: white; font-size: ${discountFontSize}; font-family: ${discountFontFamily}; font-weight: ${discountFontWeight}; padding: 2px 6px; border-radius: 3px;">
                 ${percentageOff}% OFF
               </div>
             </div>
-            <p style="font-size: ${productTitleSize}; color: ${productTitleColor}; font-weight: bold; font-family: ${descriptionFontFamily}; margin: 12px auto 8px; max-width: 180px; word-wrap: break-word;">
+            <p style="font-size: ${productTitleSize}; color: ${productTitleColor}; font-weight: ${productTitleFontWeight}; font-family: ${productTitleFontFamily}; margin: 12px auto 8px; max-width: 180px; word-wrap: break-word;">
               ${displayTitle}
             </p>
             <a href="${link}" style="
                 font-family: ${buttonFontFamily};
+                font-weight: ${buttonFontWeight};
                 display: inline-block;
                 padding: 4px 10px;
                 border: ${finalButtonBorder};
                 background: ${finalButtonBackground};
                 text-decoration: none;
                 color: ${finalButtonTextColor};
-                font-weight: bold;
                 border-radius: 5px;
                 font-size: ${buttonFontSize};
               ">
-                ${buttonText}
+                ${settings.buttonText || 'SHOP NOW'}
               </a>
           </div>
         </td>
@@ -319,7 +321,7 @@ const getDealsHtml2 = (products, settings) => {
   }
 
   return `
-  <body style="Margin:0;padding:0;background-color:#ffffff;font-family:${headerFontFamily};">
+  <body style="Margin:0;padding:0;background-color:${bodyBackgroundColor};">
     <style>
       img.datadyno-img {
         width: 119px !important;
@@ -332,10 +334,10 @@ const getDealsHtml2 = (products, settings) => {
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08) !important;
       }
     </style>
-    <table role="presentation" width="90%" border="0" cellspacing="0" cellpadding="0" style="margin: auto;">
+    <table role="presentation" width="90%" border="0" cellspacing="0" cellpadding="0" style="margin: auto; font-family: ${titleFontFamily}; font-weight: ${titleFontWeight};">
       ${titleLine1 && `<tr>
         <td align="center" style="padding: 20px 10px; background: ${titleBackgroundColor};">
-          <h2 style="margin: 0; font-size: ${titleFontSize}; color: ${titleFontColor}; font-style: ${titleFontStyle}; font-family: ${headerFontFamily};">${titleLine1}</h2>
+          <h2 style="margin: 0; font-size: ${titleFontSize}; color: ${titleFontColor}; font-style: ${titleFontStyle}; font-weight: ${titleFontWeight}; font-family: ${titleFontFamily};">${titleLine1}</h2>
         </td>
       </tr>`}
       <tr>
@@ -356,7 +358,7 @@ const getDealsHtml2 = (products, settings) => {
               </td>
               <td style="vertical-align: middle;">
                 <a href="https://datadyno.co/user/deals" target="_blank" style="display: inline-block; text-decoration: none;">
-                  <img src="https://res.cloudinary.com/dh5pf5on1/image/upload/v1747049158/temp/hff1b0ossms0dvgofjkz.png" alt="Brand Logo" style="width: 130px; height: 35px; display: block; border: 0;" />
+                  <img src="https://res.cloudinary.com/dh5pf5on1/image/upload/v1747049158/temp/hff1b0ossms0dvgofjkz.png" alt="DataDyno" style="width: 130px; height: 35px; display: block; border: 0;" />
                 </a>
               </td>
             </tr>
