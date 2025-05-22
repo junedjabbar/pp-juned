@@ -258,8 +258,12 @@ const getDealsHtml2 = (products, settings) => {
     ? (buttonTextColor || buttonBackground)
     : (buttonTextColor || '#ffffff');
 
-  const truncate = (text, length) =>
-    text.length > length ? text.substring(0, length).trim() + '...' : text;
+  const truncate = (text, fontSizePx = 14, containerWidthPx = 180, lines = 2) => {
+    const avgCharWidth = fontSizePx * 0.5; // Approximate average char width in px
+    const maxChars = Math.floor((containerWidthPx / avgCharWidth) * lines);
+    if (text.length <= maxChars) return text;
+    return text.substring(0, maxChars - 3).trim() + '...';
+  };
 
   const filteredProducts = products.slice(0, 9); // Max 3x3
 
@@ -274,7 +278,7 @@ const getDealsHtml2 = (products, settings) => {
       } = product;
 
       const link = affiliateTag ? url.replace('getpoln-20', affiliateTag) : url;
-      const displayTitle = truncate(title, maxTitleLength);
+      const displayTitle = truncate(title, parseInt(productTitleSize), 180, 2);
 
       return `
         <td width="33.33%" style="padding: 10px; text-align: center;">
@@ -337,7 +341,7 @@ const getDealsHtml2 = (products, settings) => {
           ${titleLine2 ? `<h2 style="margin: 0; font-size: ${titleFontSize}; color: ${titleFontColor}; font-style: ${titleFontStyle}; font-family: ${headerFontFamily};">${titleLine2}</h2>` : ''}
         </td>
       </tr>`
-  }
+    }
       <tr>
         <td align="center" style="padding: 20px 0;">
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
