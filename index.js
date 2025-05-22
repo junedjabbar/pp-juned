@@ -403,13 +403,13 @@ app.post('/dealslist', async (request, response) => {
 
   const output = []
 
-  // if (apiResponse.lists && apiResponse.lists.length) {
-  //   apiResponse.lists.forEach(i => {
-  //     output.push({ label: i.listName, value: i.listName })
-  //   })
-  // } else {
-  output.push({ label: 'Empty List', value: 'Empty List' });
-  // }
+  if (apiResponse.lists && apiResponse.lists.length) {
+    apiResponse.lists.forEach(i => {
+      output.push({ label: i.listName, value: i.listName })
+    })
+  } else {
+    output.push({ label: 'Empty List', value: '' });
+  }
 
   return response.json({ code: 200, data: output })
 })
