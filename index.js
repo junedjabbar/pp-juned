@@ -239,10 +239,16 @@ const getDealsHtml2 = (products, settings) => {
     buttonBackground = '#6366f1',
     buttonStyle = 'solid',
     buttonTextColor,
-    cardBackgroundColor = '#f9f9f9',
+    cardBackgroundColor = '#ffffff',
     maxTitleLength = 40,
     discountColor = 'red',
-    discountFontSize = '22px',
+    discountFontSize = '14px',
+    imageBackgroundColor = '',
+    headerFontFamily = 'Arial, sans-serif',
+    descriptionFontFamily = 'Arial, sans-serif',
+    discountFontFamily = 'Arial, sans-serif',
+    buttonFontFamily = 'Arial, sans-serif',
+    buttonText = 'SHOP NOW'
   } = settings;
 
   const isOutline = buttonStyle === 'outline';
@@ -252,12 +258,12 @@ const getDealsHtml2 = (products, settings) => {
     ? (buttonTextColor || buttonBackground)
     : (buttonTextColor || '#ffffff');
 
-  const filteredProducts = products.slice(0, 20);
-
   const truncate = (text, length) =>
     text.length > length ? text.substring(0, length).trim() + '...' : text;
 
-  const productHtml = [];
+  const filteredProducts = products.slice(0, 9); // Max 3x3
+
+  const rows = [];
   for (let i = 0; i < filteredProducts.length; i += 3) {
     const rowItems = filteredProducts.slice(i, i + 3).map(product => {
       const {
@@ -271,71 +277,78 @@ const getDealsHtml2 = (products, settings) => {
       const displayTitle = truncate(title, maxTitleLength);
 
       return `
-        <td class="column" width="33.33%" style="padding: 10px; text-align: center;">
-          <div style="background: ${cardBackgroundColor}; padding: 15px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);">
-            <img src="${image}" alt="${title}" width="280" height="310" style="width: 280px; height: 310px; display: block; margin: auto; border-radius: 6px;">
-            <p style="color: ${discountColor || 'red'}; font-weight: 900; margin: 10px 0; font-size: ${discountFontSize || '22px'};">
-              ${percentageOff}% OFF
-            </p>
-            <p class="product-title" style="max-width: 180px; font-size: ${productTitleSize}; font-weight: bold; margin: 15px auto 10px; color: ${productTitleColor}; word-wrap: break-word; overflow-wrap: break-word;">
+        <td width="33.33%" style="padding: 10px; text-align: center;">
+          <div style="background: ${cardBackgroundColor}; padding: 12px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); position: relative;">
+            <div style="position: relative; background: ${imageBackgroundColor || 'transparent'}; border-radius: 4px;">
+              <img src="${image}" alt="${title}" width="200" height="240" style="width: 200px; height: 240px; display: block; margin: auto; border-radius: 6px;">
+              <div style="position: absolute; top: 8px; right: 8px; background: ${discountColor}; color: white; font-size: ${discountFontSize}; font-family: ${discountFontFamily}; padding: 2px 6px; border-radius: 3px; font-weight: bold;">
+                ${percentageOff}% OFF
+              </div>
+            </div>
+            <p style="font-size: ${productTitleSize}; color: ${productTitleColor}; font-weight: bold; font-family: ${descriptionFontFamily}; margin: 12px auto 8px; max-width: 180px; word-wrap: break-word;">
               ${displayTitle}
             </p>
-            <a href="${link}" style="width: 70%; display: inline-block; padding: 10px 20px; border: ${finalButtonBorder}; background: ${finalButtonBackground}; text-decoration: none; color: ${finalButtonTextColor}; font-weight: bold; border-radius: 5px;">
-              SHOP NOW
+            <a href="${link}" style="font-family: ${buttonFontFamily}; display: inline-block; padding: 8px 16px; border: ${finalButtonBorder}; background: ${finalButtonBackground}; text-decoration: none; color: ${finalButtonTextColor}; font-weight: bold; border-radius: 5px;">
+              ${buttonText}
             </a>
           </div>
         </td>
       `;
     }).join('');
 
-    productHtml.push(`<tr>${rowItems}</tr>`);
+    const columnCount = filteredProducts.slice(i, i + 3).length;
+    const totalColumns = 3;
+    const emptyCells = totalColumns - columnCount;
+    const emptyHtml = '<td width="33.33%"></td>'.repeat(Math.floor(emptyCells / 2));
+
+    rows.push(`<tr>${emptyHtml}${rowItems}${emptyHtml}</tr>`);
   }
 
   return `
-  <body style="Margin:0;padding:0;background-color:#ffffff;font-family:Arial,sans-serif;">
-    <table role="presentation" width="80%" border="0" cellspacing="0" cellpadding="0" style="margin: auto;">
+  <body style="Margin:0;padding:0;background-color:#ffffff;font-family:${headerFontFamily};">
+    <table role="presentation" width="90%" border="0" cellspacing="0" cellpadding="0" style="margin: auto;">
       ${(titleLine1 || titleLine2) &&
     `<tr>
-          <td align="center" style="padding: 20px 10px; background: ${titleBackgroundColor};">
-            ${titleLine1 ? `<h2 style="margin: 0; font-size: ${titleFontSize}; color: ${titleFontColor}; font-style: ${titleFontStyle};">${titleLine1}</h2>` : ''}
-            ${titleLine2 ? `<h2 style="margin: 0; font-size: ${titleFontSize}; color: ${titleFontColor}; font-style: ${titleFontStyle};">${titleLine2}</h2>` : ''}
-          </td>
-        </tr>`
+        <td align="center" style="padding: 20px 10px; background: ${titleBackgroundColor};">
+          ${titleLine1 ? `<h2 style="margin: 0; font-size: ${titleFontSize}; color: ${titleFontColor}; font-style: ${titleFontStyle}; font-family: ${headerFontFamily};">${titleLine1}</h2>` : ''}
+          ${titleLine2 ? `<h2 style="margin: 0; font-size: ${titleFontSize}; color: ${titleFontColor}; font-style: ${titleFontStyle}; font-family: ${headerFontFamily};">${titleLine2}</h2>` : ''}
+        </td>
+      </tr>`
     }
       <tr>
         <td align="center" style="padding: 20px 0;">
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
-            ${productHtml.join('')}
+            ${rows.join('')}
           </table>
         </td>
       </tr>
-      <br/>
       <tr>
-       <td style="padding: 20px 10px;">
-         <a href="https://datadyno.co" target="_blank" style="text-decoration: none; display: inline-block;">
-           <table role="presentation" cellpadding="0" cellspacing="0" border="0">
-             <tr>
-               <td style="vertical-align: middle;">
-                 <span style="font-size: 22px; color: ${titleFontColor}; margin-right: 10px">
-                   Powered by
-                 </span>
-               </td>
-               <td style="vertical-align: middle;">
-                 <img src="https://res.cloudinary.com/dh5pf5on1/image/upload/v1747049158/temp/hff1b0ossms0dvgofjkz.png" alt="Brand Logo" style="width: 130px;height: 35px; display: block;" />
-               </td>
-             </tr>
-           </table>
-         </a>
-       </td>
+        <td align="center" style="padding: 30px 10px;">
+          <a href="https://datadyno.co/user/deals" target="_blank" style="text-decoration: none; display: inline-block;">
+            <table role="presentation" cellpadding="0" cellspacing="0" border="0">
+              <tr>
+                <td style="vertical-align: middle;">
+                  <span style="font-size: 18px; color: ${titleFontColor}; font-family: ${headerFontFamily}; margin-right: 10px">
+                    Powered by
+                  </span>
+                </td>
+                <td style="vertical-align: middle;">
+                  <img src="https://res.cloudinary.com/dh5pf5on1/image/upload/v1747049158/temp/hff1b0ossms0dvgofjkz.png" alt="Brand Logo" style="width: 130px;height: 35px; display: block;" />
+                </td>
+              </tr>
+            </table>
+          </a>
+        </td>
       </tr>
     </table>
   </body>
-  `
+  `;
 };
+
 
 app.post('/dealslist', async (request, response) => {
   const { key, search } = request.body;
-  
+
   console.log(`Request received for dealslist: [${safeStringify(request)}]`)
 
   const authHeader = request.headers;
