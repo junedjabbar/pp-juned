@@ -403,11 +403,13 @@ app.post('/dealslist', async (request, response) => {
 
   const output = []
 
-  if (apiResponse.lists && apiResponse.lists.length) {
-    apiResponse.lists.forEach(i => {
-      output.push({ label: i.listName, value: i.listName })
-    })
-  }
+  // if (apiResponse.lists && apiResponse.lists.length) {
+  //   apiResponse.lists.forEach(i => {
+  //     output.push({ label: i.listName, value: i.listName })
+  //   })
+  // } else {
+  output.push({ label: 'Empty List', value: 'Empty List' });
+  // }
 
   return response.json({ code: 200, data: output })
 })
@@ -419,23 +421,53 @@ app.post('/deals', async (request, response) => {
 
   const { list, key } = settings;
 
-  const url = `/creator/lists/${list}`
+  if (list === 'Empty List') {
+    const noListHtml = `
+      <body style="Margin:0;padding:20px; font-family: Arial, sans-serif; background-color: #ffffff;">
+        <h2 style="text-align: center; color: #333333;">
+          No deals list selected.
+        </h2>
+        <p style="text-align: center;">
+          Please <a href="https://datadyno.co/creator/deals" target="_blank" style="color: #6366f1; text-decoration: none; font-weight: bold;">click here</a> to create a deals list.
+        </p>
+      </body>
+    `;
+    return response.json({
+      code: 200,
+      html: noListHtml
+    });
+  }
 
-  const apiResponse = await executeApiCall(key, url)
+  const url = `/creator/lists/${list}`;
 
-  const dealProducts = apiResponse.products
-  // data.find(d => d[list])[list]
+  const apiResponse = await executeApiCall(key, url);
 
-  // const products = await getDeals(settings);
+  const dealProducts = apiResponse?.products || [];
 
-  const html = getDealsHtml2(dealProducts, settings); // Show first 6 products
+  if (dealProducts.length === 0) {
+    const noProductsHtml = `
+      <body style="Margin:0;padding:20px; font-family: Arial, sans-serif; background-color: #ffffff;">
+        <h2 style="text-align: center; color: #333333;">
+          There are no products in the list.
+        </h2>
+        <p style="text-align: center;">
+          Please <a href="https://datadyno.co/creator/deals" target="_blank" style="color: #6366f1; text-decoration: none; font-weight: bold;">click here</a> to add products to your deals list.
+        </p>
+      </body>
+    `;
+    return response.json({
+      code: 200,
+      html: noProductsHtml
+    });
+  }
+
+  const html = getDealsHtml2(dealProducts, settings);
 
   return response.json({
     code: 200,
     html
   });
 });
-
 
 app.listen(port, () => {
   console.log(`Server running at http://localhost:${port}`)

@@ -1,50 +1,122 @@
 [
     {
-        "name": "search",
-        "label": "Search Term",
-        "required": false,
-        "help": "Provide a search term (product name / description)",
+        "name": "key",
+        "label": "Key",
+        "required": true,
+        "help": "DataDyno API key",
+        "type": "text",
+        "placeholder": "DataDyno API key"
+    },
+    {
+        "name": "list",
+        "label": "Deals List",
+        "required": true,
+        "help": "Select a deal list that you created on datadyno.co",
         "type": "search",
-        "placeholder": "Enter a search term..."
+        "multiselect": null,
+        "placeholder": "Deals list",
+        "request_url": "https://pp-juned.vercel.app/dealslist",
+        "dependencies": [
+            "key"
+        ]
     },
     {
-        "name": "category",
-        "label": "Category Name",
+        "name": "titleLine1",
+        "label": "Title",
         "required": false,
-        "help": "Provide a category name",
+        "help": "Title to show!",
         "type": "text",
-        "placeholder": "Enter a category name..."
+        "placeholder": "Title to show!"
     },
     {
-        "name": "affiliateTag",
-        "label": "Affilate Tag Id",
+        "name": "titleFontColor",
+        "label": "Title Font Color",
+        "type": "color",
         "required": false,
-        "help": "Provide an affiliate tag id",
-        "type": "text",
-        "placeholder": "Enter an affiliate tag id..."
+        "help": "Color of the title text"
     },
     {
-        "name": "product1",
-        "label": "ASIN",
+        "name": "titleBackgroundColor",
+        "label": "Title Background Color",
+        "type": "color",
         "required": false,
-        "help": "Provide Amazon Product ASIN",
-        "type": "text",
-        "placeholder": "Enter amazon product asin..."
+        "help": "Background color for the title section"
     },
     {
-        "name": "product2",
-        "label": "ASIN",
+        "name": "titleFontFamily",
+        "label": "Title Font Family",
+        "type": "fontFamily",
         "required": false,
-        "help": "Provide Amazon Product ASIN",
-        "type": "text",
-        "placeholder": "Enter amazon product asin..."
+        "help": "Font family + weight for the title (e.g., {fontFamily:'Arial', fontWeight: 'normal'})"
     },
     {
-        "name": "product3",
-        "label": "ASIN",
+        "name": "productTitleColor",
+        "label": "Product Title Color",
+        "type": "color",
         "required": false,
-        "help": "Provide Amazon Product ASIN",
-        "type": "text",
-        "placeholder": "Enter amazon product asin..."
+        "help": "Color of the product title/description"
+    },
+    {
+        "name": "productTitleFontFamily",
+        "label": "Product Title Font Family",
+        "type": "fontFamily",
+        "required": false,
+        "help": "Font family + weight for the product title"
+    },
+    {
+        "name": "buttonBackground",
+        "label": "Shop Now Button Background",
+        "type": "color",
+        "required": false,
+        "help": "Background color for the Shop Now button"
+    },
+    {
+        "name": "buttonTextColor",
+        "label": "Shop Now Button Text Color",
+        "type": "color",
+        "required": false,
+        "help": "Text color for the Shop Now button"
+    },
+    {
+        "name": "buttonFontFamily",
+        "label": "Shop Now Button Font Family",
+        "type": "fontFamily",
+        "required": false,
+        "help": "Font family + weight for the Shop Now button"
+    },
+    {
+        "name": "cardBackgroundColor",
+        "label": "Card Background Color",
+        "type": "color",
+        "required": false,
+        "help": "Background color behind the image and text"
+    },
+    {
+        "name": "imageBackgroundColor",
+        "label": "Image Background Color",
+        "type": "color",
+        "required": false,
+        "help": "Background color behind the product image"
+    },
+    {
+        "name": "discountColor",
+        "label": "Discount Badge Background Color",
+        "type": "color",
+        "required": false,
+        "help": "Color of the discount badge background"
+    },
+    {
+        "name": "discountFontFamily",
+        "label": "Discount Font Family",
+        "type": "fontFamily",
+        "required": false,
+        "help": "Font family + weight for discount badge"
+    },
+    {
+        "name": "bodyBackgroundColor",
+        "label": "Body Background Color",
+        "type": "color",
+        "required": false,
+        "help": "Background color of the whole email"
     }
 ]
