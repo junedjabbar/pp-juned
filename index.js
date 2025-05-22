@@ -229,26 +229,27 @@ const getDealsHtml2 = (products, settings) => {
   const {
     affiliateTag,
     titleLine1 = '',
-    titleFontSize = '18px', // keep size if you want or remove if not used
+    titleFontSize = '18px',
     titleFontColor = '#000000',
     titleFontStyle = 'italic',
+    titleBackgroundColor = '#c2c2f7',
 
     // fontFamily now object: { fontFamily, fontWeight }
     titleFontFamily = { fontFamily: 'Arial, sans-serif', fontWeight: 'normal' },
 
     productTitleColor = '#6366f1',
-    productTitleSize = '14px', // can remove if unused
+    productTitleSize = '14px',
     productTitleFontFamily = { fontFamily: 'Arial, sans-serif', fontWeight: 'bold' },
 
     buttonBackground = '#6366f1',
     buttonStyle = 'solid',
     buttonTextColor,
-    buttonFontSize = '12px', // can remove if unused
+    buttonFontSize = '12px',
     buttonFontFamily = { fontFamily: 'Arial, sans-serif', fontWeight: 'bold' },
 
     cardBackgroundColor = '#ffffff',
     discountColor = 'red',
-    discountFontSize = '14px', // can remove if unused
+    discountFontSize = '14px',
     discountFontFamily = { fontFamily: 'Arial, sans-serif', fontWeight: 'bold' },
 
     imageBackgroundColor = '',
