@@ -467,7 +467,7 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
   `;
 };
 
-app.post('/hamza/html', async (request, response) => {
+app.post('/debug/html', async (request, response) => {
   const settings = request.body.settings;
   const styles = request.body.styles;
   const dealProducts = request.body.products
