@@ -478,7 +478,7 @@ const getDealsHtml3 = (products, settings, tagStyles = {}) => {
             <p style="${pStyle}; margin: 12px auto 8px; max-width: 180px; word-wrap: break-word;">
               ${displayTitle}
             </p>
-            <a href="${link}" style="${aStyle}; display: inline-block; padding: 4px 10px; border: ${finalButtonBorder}; background: ${finalButtonBackground}; color: ${finalButtonTextColor}; border-radius: 5px;">
+            <a href="${link}" style="${aStyle}; display: inline-block; padding: 4px 10px; border: ${finalButtonBorder}; background: ${finalButtonBackground}; color: ${finalButtonTextColor}; border-radius: 5px; text-decoration: none;">
               ${buttonText}
             </a>
           </div>
