@@ -395,10 +395,10 @@ const getDealsHtml3 = (products, settings, tagStyles = {}) => {
   const {
     affiliateTag,
     titleLine1 = '',
-    titleBackgroundColor = '#c2c2f7',
+    titleBackgroundColor = '#5E60CE',
     buttonText = 'SHOP NOW',
     buttonStyle = 'solid',
-    buttonBackground = '#6366f1',
+    buttonBackground = '#5E60CE',
     buttonTextColor,
     cardBackgroundColor = '#ffffff',
     discountColor = 'red',
