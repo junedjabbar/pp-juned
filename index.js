@@ -412,6 +412,10 @@ const getDealsHtml3 = (products, settings, tagStyles = {}) => {
       .join('; ');
 
   const pStyle = styleObjectToString(tagStyles.p);
+
+  logger.info(tagStyles.p)
+  logger.info(pStyle)
+
   const h2Style = styleObjectToString(tagStyles.h2);
   const aStyle = styleObjectToString(tagStyles.a);
 
