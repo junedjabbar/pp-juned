@@ -395,10 +395,10 @@ const getDealsHtml3 = (products, settings, tagStyles = {}) => {
   const {
     affiliateTag,
     titleLine1 = '',
-    titleBackgroundColor = '#5E60CE',
+    titleBackgroundColor = '#c2c2f7',
     buttonText = 'SHOP NOW',
     buttonStyle = 'solid',
-    buttonBackground = '#5E60CE',
+    buttonBackground = '#6366f1',
     buttonTextColor,
     cardBackgroundColor = '#ffffff',
     discountColor = 'red',
@@ -406,12 +406,30 @@ const getDealsHtml3 = (products, settings, tagStyles = {}) => {
     bodyBackgroundColor = '#ffffff',
   } = settings;
 
-   // Only extract font-family as inline style string, if it exists
-   const fontFamilyStyle = styleObj => {
+  // Only extract font-family as inline style string, if it exists
+  const fontFamilyStyle = styleObj => {
     if (styleObj && styleObj.fontFamily) {
       return `font-family: ${styleObj.fontFamily}`;
     }
     return '';
+  };
+
+  const productTitleStyles = (styleObj) => {
+    const keysToKeep = ['fontFamily', 'color'];
+    return Object.entries(styleObj || {})
+      .filter(([key]) => keysToKeep.includes(key))
+      .map(([key, value]) => {
+        // fontSize is a number, convert to px
+        if (key === 'fontSize' && typeof value === 'number') {
+          return `font-size: ${value}px`;
+        }
+        // fontWeight can be number or string, just return as-is
+        // fontFamily and color are strings
+        // Convert camelCase to kebab-case for CSS
+        const cssKey = key.replace(/[A-Z]/g, m => '-' + m.toLowerCase());
+        return `${cssKey}: ${value}`;
+      })
+      .join('; ');
   };
 
   const extractSelectedStyles = (styleObj) => {
@@ -436,6 +454,7 @@ const getDealsHtml3 = (products, settings, tagStyles = {}) => {
   const h2Style = fontFamilyStyle(tagStyles.h2);
   const aStyle = fontFamilyStyle(tagStyles.a);
   const h4Style = extractSelectedStyles(tagStyles.h4);
+  const pTitleSyle = productTitleStyles(tagStyles.p)
 
   const isOutline = buttonStyle === 'outline';
   const finalButtonBackground = isOutline ? 'transparent' : buttonBackground;
@@ -455,16 +474,16 @@ const getDealsHtml3 = (products, settings, tagStyles = {}) => {
   const rows = [];
   for (let i = 0; i < filteredProducts.length; i += 3) {
     const rowItems = filteredProducts.slice(i, i + 3).map(product => {
-      
+
       const {
         title = product?.title,
         image = product?.image,
         percentageOff = product?.percentage,
         url,
       } = product;
-      
+
       const link = affiliateTag ? url.replace('getpoln-20', affiliateTag) : url;
-      const displayTitle = truncate(title, 14, 180, 2);
+      const displayTitle = truncate(title, 10, 180, 2);
 
       return `
         <td width="33.33%" style="padding: 10px; text-align: center;">
@@ -475,7 +494,7 @@ const getDealsHtml3 = (products, settings, tagStyles = {}) => {
                 ${percentageOff}% OFF
               </div>
             </div>
-            <p style="${pStyle}; margin: 12px auto 8px; max-width: 180px; word-wrap: break-word;">
+            <p style="${pTitleSyle}; margin: 12px auto 8px; max-width: 180px; word-wrap: break-word;">
               ${displayTitle}
             </p>
             <a href="${link}" style="${aStyle}; display: inline-block; padding: 4px 10px; border: ${finalButtonBorder}; background: ${finalButtonBackground}; color: ${finalButtonTextColor}; border-radius: 5px; text-decoration: none;">
