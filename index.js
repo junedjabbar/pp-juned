@@ -433,7 +433,14 @@ const getDealsHtml3 = (products, settings, tagStyles = {}) => {
   const rows = [];
   for (let i = 0; i < filteredProducts.length; i += 3) {
     const rowItems = filteredProducts.slice(i, i + 3).map(product => {
-      const { title, image, percentageOff, url } = product;
+      
+      const {
+        title = product?.title,
+        image = product?.image,
+        percentageOff = product?.percentage,
+        url,
+      } = product;
+      
       const link = affiliateTag ? url.replace('getpoln-20', affiliateTag) : url;
       const displayTitle = truncate(title, 14, 180, 2);
 
