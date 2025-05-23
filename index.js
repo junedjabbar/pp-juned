@@ -408,6 +408,8 @@ app.post('/dealslist', async (request, response) => {
 
   const apiResponse = await executeApiCall(key, '/creator/lists')
 
+  console.log(`Response returned from api is: ${JSON.stringify(apiResponse)}`)
+
   const apiList = apiResponse?.list || []
   const output = []
 
@@ -418,6 +420,8 @@ app.post('/dealslist', async (request, response) => {
   } else {
     output.push({ label: 'Empty List', value: 'Empty List' });
   }
+
+  console.log(`Returning response ${JSON.stringify(output)}`)
 
   return response.json({ code: 200, data: output })
 })
