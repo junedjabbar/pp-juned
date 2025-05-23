@@ -394,6 +394,10 @@ const getDealsHtml2 = (products, settings) => {
 app.post('/dealslist', async (request, response) => {
   const { key, search } = request.body;
 
+  if (!key) {
+    throw new Error(`Key is required`)
+  }
+
   console.log(`Request received for dealslist: [${safeStringify(request)}]`)
 
   const authHeader = request.headers;
