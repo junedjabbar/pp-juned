@@ -467,7 +467,8 @@ const getDealsHtml3 = (products, settings, tagStyles = {}) => {
     const avgCharWidth = fontSizePx * 0.5;
     const maxChars = Math.floor((containerWidthPx / avgCharWidth) * lines);
     if (text.length <= maxChars) return text;
-    return text.substring(0, maxChars - 3).trim() + '...';
+    const toReturn = text.substring(0, maxChars - 3).trim() + '...'
+    return toReturn.trim();
   };
 
   const filteredProducts = products.slice(0, 9);
@@ -483,7 +484,7 @@ const getDealsHtml3 = (products, settings, tagStyles = {}) => {
       } = product;
 
       const link = affiliateTag ? url.replace('getpoln-20', affiliateTag) : url;
-      const displayTitle = truncate(title, 10, 180, 2);
+      const displayTitle = truncate(title, 10, 80, 2);
 
       return `
         <td width="33.33%" style="padding: 10px; text-align: center;">
