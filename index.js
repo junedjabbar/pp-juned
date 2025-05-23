@@ -410,7 +410,7 @@ app.post('/dealslist', async (request, response) => {
 
   console.log(`Response returned from api is: ${JSON.stringify(apiResponse)}`)
 
-  const apiList = apiResponse?.list || []
+  const apiList = apiResponse?.lists || []
   const output = []
 
   if (apiList && apiList?.length) {
