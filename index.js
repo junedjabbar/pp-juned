@@ -406,16 +406,24 @@ const getDealsHtml3 = (products, settings, tagStyles = {}) => {
     bodyBackgroundColor = '#ffffff',
   } = settings;
 
+  const camelToKebab = str =>
+    str.replace(/[A-Z]/g, m => '-' + m.toLowerCase());
+
   const styleObjectToString = styleObj =>
     Object.entries(styleObj || {})
-      .map(([k, v]) => `${k}: ${v}`)
+      .map(([key, value]) => {
+        const cssKey = camelToKebab(key);
+        const unitlessProps = new Set([
+          'line-height', 'font-weight', 'opacity', 'z-index', 'flex', 'order', 'zoom', 'letter-spacing'
+        ]);
+        if (typeof value === 'number' && !unitlessProps.has(cssKey)) {
+          return `${cssKey}: ${value}px`;
+        }
+        return `${cssKey}: ${value}`;
+      })
       .join('; ');
 
   const pStyle = styleObjectToString(tagStyles.p);
-
-  logger.info(tagStyles.p)
-  logger.info(pStyle)
-
   const h2Style = styleObjectToString(tagStyles.h2);
   const aStyle = styleObjectToString(tagStyles.a);
 
@@ -525,7 +533,6 @@ const getDealsHtml3 = (products, settings, tagStyles = {}) => {
   </body>
   `;
 };
-
 
 app.post('/dealslist', async (request, response) => {
   const { key, search } = request.body;
