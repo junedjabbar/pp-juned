@@ -414,9 +414,28 @@ const getDealsHtml3 = (products, settings, tagStyles = {}) => {
     return '';
   };
 
+  const extractSelectedStyles = (styleObj) => {
+    const keysToKeep = ['fontFamily', 'fontSize', 'color', 'fontWeight'];
+    return Object.entries(styleObj || {})
+      .filter(([key]) => keysToKeep.includes(key))
+      .map(([key, value]) => {
+        // fontSize is a number, convert to px
+        if (key === 'fontSize' && typeof value === 'number') {
+          return `font-size: ${value}px`;
+        }
+        // fontWeight can be number or string, just return as-is
+        // fontFamily and color are strings
+        // Convert camelCase to kebab-case for CSS
+        const cssKey = key.replace(/[A-Z]/g, m => '-' + m.toLowerCase());
+        return `${cssKey}: ${value}`;
+      })
+      .join('; ');
+  };
+
   const pStyle = fontFamilyStyle(tagStyles.p);
   const h2Style = fontFamilyStyle(tagStyles.h2);
   const aStyle = fontFamilyStyle(tagStyles.a);
+  const h4Style = extractSelectedStyles(tagStyles.h4);
 
   const isOutline = buttonStyle === 'outline';
   const finalButtonBackground = isOutline ? 'transparent' : buttonBackground;
@@ -492,7 +511,7 @@ const getDealsHtml3 = (products, settings, tagStyles = {}) => {
     <table role="presentation" width="90%" border="0" cellspacing="0" cellpadding="0" style="margin: auto;">
       ${titleLine1 && `<tr>
         <td align="center" style="padding: 20px 10px; background: ${titleBackgroundColor};">
-          <h2 style="${h2Style}">${titleLine1}</h2>
+          <h4 style="${h4Style}">${titleLine1}</h4>
         </td>
       </tr>`}
       <tr>
