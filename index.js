@@ -406,26 +406,17 @@ const getDealsHtml3 = (products, settings, tagStyles = {}) => {
     bodyBackgroundColor = '#ffffff',
   } = settings;
 
-  const camelToKebab = str =>
-    str.replace(/[A-Z]/g, m => '-' + m.toLowerCase());
+   // Only extract font-family as inline style string, if it exists
+   const fontFamilyStyle = styleObj => {
+    if (styleObj && styleObj.fontFamily) {
+      return `font-family: ${styleObj.fontFamily}`;
+    }
+    return '';
+  };
 
-  const styleObjectToString = styleObj =>
-    Object.entries(styleObj || {})
-      .map(([key, value]) => {
-        const cssKey = camelToKebab(key);
-        const unitlessProps = new Set([
-          'line-height', 'font-weight', 'opacity', 'z-index', 'flex', 'order', 'zoom', 'letter-spacing'
-        ]);
-        if (typeof value === 'number' && !unitlessProps.has(cssKey)) {
-          return `${cssKey}: ${value}px`;
-        }
-        return `${cssKey}: ${value}`;
-      })
-      .join('; ');
-
-  const pStyle = styleObjectToString(tagStyles.p);
-  const h2Style = styleObjectToString(tagStyles.h2);
-  const aStyle = styleObjectToString(tagStyles.a);
+  const pStyle = fontFamilyStyle(tagStyles.p);
+  const h2Style = fontFamilyStyle(tagStyles.h2);
+  const aStyle = fontFamilyStyle(tagStyles.a);
 
   const isOutline = buttonStyle === 'outline';
   const finalButtonBackground = isOutline ? 'transparent' : buttonBackground;
