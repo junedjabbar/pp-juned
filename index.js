@@ -298,10 +298,10 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
   const {
     affiliateTag,
     titleLine1 = '',
-    titleBackgroundColor = '#146eb4', // Amazon blue
+    titleBackgroundColor = '#c2c2f7',
     buttonText = 'SHOP NOW',
     buttonStyle = 'solid',
-    buttonBackground = '#ff9900', // Amazon orange
+    buttonBackground = '#6366f1',
     buttonTextColor,
     cardBackgroundColor = '#ffffff',
     discountColor = 'red',
@@ -309,6 +309,7 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
     bodyBackgroundColor = '#ffffff',
   } = settings;
 
+  // Only extract font-family as inline style string, if it exists
   const fontFamilyStyle = styleObj => {
     if (styleObj && styleObj.fontFamily) {
       return `font-family: ${styleObj.fontFamily}`;
@@ -357,8 +358,7 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
       ? (buttonTextColor || buttonBackground)
       : (buttonTextColor || '#ffffff');
 
-  // truncate is used to limit raw length — keep for safety but CSS will do real truncation
-  const truncate = (text, fontSizePx = 14, containerWidthPx = 180, lines = 2) => {
+  const truncate = (text, fontSizePx = 14, containerWidthPx = 180, lines = 4) => {
     const avgCharWidth = fontSizePx * 0.5;
     const maxChars = Math.floor((containerWidthPx / avgCharWidth) * lines);
     if (text.length <= maxChars) return text;
@@ -377,47 +377,46 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
       } = product;
 
       const link = affiliateTag ? url.replace('getpoln-20', affiliateTag) : url;
-      const displayTitle = truncate(title, 10, 120, 2);
+      const displayTitle = truncate(title, 10, 120, 4);
 
       return `
         <td width="33.33%" style="padding: 10px; text-align: center; vertical-align: top;">
-          <div style="background: ${cardBackgroundColor}; padding: 12px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); position: relative; height: 330px; display: flex; flex-direction: column; justify-content: space-between;">
+          <div style="background: ${cardBackgroundColor}; padding: 12px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); position: relative; height: 320px; display: flex; flex-direction: column; justify-content: space-between;">
             <div style="position: relative; background: ${imageBackgroundColor || 'transparent'}; border-radius: 4px;">
               <img src="${image}" alt="${title}" class="datadyno-img" />
               <div style="position: absolute; top: 8px; right: 8px; background: ${discountColor}; color: white; font-size: 14px; font-weight: bold; padding: 2px 6px; border-radius: 3px;">
                 ${percentageOff}% OFF
               </div>
             </div>
-            <p style="${pTitleSyle}; margin: 12px auto 8px; max-width: 180px; 
-              overflow: hidden; 
-              text-overflow: ellipsis; 
-              display: -webkit-box; 
-              -webkit-line-clamp: 2; 
-              -webkit-box-orient: vertical; 
-              height: 42px; /* fixed height for 2 lines approx */
-              line-height: 21px;
+            <p style="
+              ${pTitleSyle};
+              margin: 12px auto 8px;
+              max-width: 180px;
               word-wrap: break-word;
-              flex-grow: 0;
+              display: -webkit-box;
+              -webkit-line-clamp: 4;
+              -webkit-box-orient: vertical;
+              overflow: hidden;
+              height: 88px;
+              line-height: 22px;
             ">
               ${displayTitle}
             </p>
-            <a href="${link}" style="${aStyle}; 
-              display: inline-flex; 
-              align-items: center; 
-              justify-content: center;
-              height: 40px; 
-              min-width: 120px;
-              padding: 0 20px; 
-              border: ${finalButtonBorder}; 
-              background: ${finalButtonBackground}; 
-              color: ${finalButtonTextColor}; 
-              border-radius: 5px; 
-              text-decoration: none; 
-              font-weight: bold;
+            <a href="${link}" style="
+              ${aStyle};
+              display: inline-block;
+              padding: 8px 14px;
+              border: ${finalButtonBorder};
+              background: ${finalButtonBackground};
+              color: ${finalButtonTextColor};
+              border-radius: 5px;
+              text-decoration: none;
+              font-weight: 600;
               font-size: 14px;
-              margin: 0 auto;
+              text-align: center;
+              width: 100%;
               box-sizing: border-box;
-              ">
+            ">
               ${buttonText}
             </a>
           </div>
@@ -450,7 +449,7 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
     <table role="presentation" width="90%" border="0" cellspacing="0" cellpadding="0" style="margin: auto;">
       ${titleLine1 && `<tr>
         <td align="center" style="padding: 20px 10px; background: ${titleBackgroundColor};">
-          <h4 style="${h4Style} color: #fff; margin: 0;">${titleLine1}</h4>
+          <h4 style="${h4Style}">${titleLine1}</h4>
         </td>
       </tr>`}
       <tr>
