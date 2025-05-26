@@ -298,15 +298,15 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
   const {
     affiliateTag,
     titleLine1 = '',
-    titleBackgroundColor = '#232f3e',
+    titleBackgroundColor = '#6366f1',
     buttonText = 'SHOP NOW',
     buttonStyle = 'solid',
-    buttonBackground = '#ff9900',
+    buttonBackground = '#6366f1',
     buttonTextColor,
     cardBackgroundColor = '#ffffff',
-    discountColor = '#cc0c39',
-    imageBackgroundColor = '#ffffff',
-    bodyBackgroundColor = '#eaeded',
+    discountColor = '#ef4444',
+    imageBackgroundColor = '#f8fafc',
+    bodyBackgroundColor = '#f1f5f9',
   } = settings;
 
   // Extract font styles
@@ -362,37 +362,39 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
 
     const link = affiliateTag ? url.replace('getpoln-20', affiliateTag) : url;
     const displayTitle = truncate(title, 80);
+    const isEven = index % 2 === 0;
+    const rowBg = isEven ? '#ffffff' : '#f8fafc';
 
     return `
       <tr>
-        <td style="padding: 0 0 20px 0;">
+        <td style="padding: 0;">
           <!-- Desktop Layout -->
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="desktop-table" style="background: ${cardBackgroundColor}; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: 1px solid #d5dbdb;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="desktop-table" style="background: ${rowBg}; border-radius: 12px; margin-bottom: 16px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
             <tr>
-              <td width="200" style="padding: 20px; vertical-align: middle; text-align: center; background: #f7f8f8; border-right: 1px solid #e7e7e7;">
-                <div style="background: ${imageBackgroundColor}; padding: 15px; border-radius: 4px; border: 1px solid #e7e7e7;">
-                  <img src="${image}" alt="${title}" class="product-img" style="width: 140px; height: 140px; object-fit: contain; display: block; margin: 0 auto;" />
+              <td width="200" style="padding: 24px; vertical-align: middle; text-align: center;">
+                <div style="background: ${imageBackgroundColor}; border-radius: 12px; padding: 16px; position: relative; display: inline-block;">
+                  <img src="${image}" alt="${title}" class="product-img" style="width: 140px; height: 140px; object-fit: contain; border-radius: 8px;" />
+                  <div style="position: absolute; top: 8px; right: 8px; background: ${discountColor}; color: white; font-size: 12px; font-weight: 700; padding: 4px 8px; border-radius: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    ${percentageOff}% OFF
+                  </div>
                 </div>
               </td>
-              <td style="padding: 20px; vertical-align: middle; position: relative;">
-                <div style="position: absolute; top: 15px; right: 15px; background: ${discountColor}; color: white; font-size: 12px; font-weight: 700; padding: 4px 8px; border-radius: 3px;">
-                  ${percentageOff}% OFF
-                </div>
-                <h3 style="${pStyle}; font-size: 16px; font-weight: 500; color: #0f1111; margin: 0 0 8px 0; line-height: 1.3; padding-right: 80px;">
+              <td style="padding: 24px; vertical-align: middle;">
+                <h3 style="${pStyle}; font-size: 18px; font-weight: 600; color: #1e293b; margin: 0 0 12px 0; line-height: 1.4;">
                   ${displayTitle}
                 </h3>
                 ${price ? `
-                <div style="margin-bottom: 12px;">
-                  <span style="font-size: 18px; font-weight: 700; color: #b12704; margin-right: 8px;">${price}</span>
-                  ${originalPrice ? `<span style="font-size: 14px; color: #565959; text-decoration: line-through;">${originalPrice}</span>` : ''}
+                <div style="margin-bottom: 16px;">
+                  <span style="font-size: 20px; font-weight: 700; color: #059669; margin-right: 8px;">$${price}</span>
+                  ${originalPrice ? `<span style="font-size: 16px; color: #64748b; text-decoration: line-through;">$${originalPrice}</span>` : ''}
                 </div>
                 ` : ''}
-                <div style="margin-bottom: 15px;">
-                  <span style="color: #cc0c39; font-size: 14px; font-weight: 600;">
-                    You Save: ${percentageOff}%
+                <div style="margin-bottom: 16px;">
+                  <span style="display: inline-block; background: linear-gradient(135deg, ${discountColor}, #dc2626); color: white; padding: 6px 12px; border-radius: 20px; font-size: 14px; font-weight: 600;">
+                    Save ${percentageOff}%
                   </span>
                 </div>
-                <a href="${link}" style="${aStyle}; display: inline-block; padding: 8px 16px; border: ${finalButtonBorder}; background: ${finalButtonBackground}; color: ${finalButtonTextColor || '#0f1111'}; border-radius: 3px; text-decoration: none; font-weight: 600; font-size: 13px; border: 1px solid #fcd200; cursor: pointer;">
+                <a href="${link}" style="${aStyle}; display: inline-block; padding: 12px 24px; border: ${finalButtonBorder}; background: linear-gradient(135deg, ${finalButtonBackground}, #4f46e5); color: ${finalButtonTextColor}; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; transition: all 0.2s; box-shadow: 0 2px 4px rgba(99, 102, 241, 0.2);">
                   ${buttonText}
                 </a>
               </td>
@@ -400,34 +402,29 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
           </table>
           
           <!-- Mobile Layout -->
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="mobile-table" style="background: ${cardBackgroundColor}; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: 1px solid #d5dbdb; display: none;">
-            <tr>
-              <td style="padding: 20px; text-align: center; position: relative; background: #f7f8f8; border-bottom: 1px solid #e7e7e7;">
-                <div style="position: absolute; top: 10px; right: 10px; background: ${discountColor}; color: white; font-size: 12px; font-weight: 700; padding: 4px 8px; border-radius: 3px;">
-                  ${percentageOff}% OFF
-                </div>
-                <div style="background: ${imageBackgroundColor}; padding: 15px; border-radius: 4px; border: 1px solid #e7e7e7; display: inline-block;">
-                  <img src="${image}" alt="${title}" class="product-img-mobile" style="width: 120px; height: 120px; object-fit: contain; display: block;" />
-                </div>
-              </td>
-            </tr>
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="mobile-table" style="background: ${rowBg}; border-radius: 12px; margin-bottom: 16px; overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08); display: none;">
             <tr>
               <td style="padding: 20px; text-align: center;">
-                <h3 style="${pStyle}; font-size: 16px; font-weight: 500; color: #0f1111; margin: 0 0 12px 0; line-height: 1.3;">
+                <div style="background: ${imageBackgroundColor}; border-radius: 12px; padding: 16px; margin-bottom: 16px; position: relative; display: inline-block;">
+                  <img src="${image}" alt="${title}" class="product-img-mobile" style="width: 120px; height: 120px; object-fit: contain; border-radius: 8px;" />
+                  <div style="position: absolute; top: 8px; right: 8px; background: ${discountColor}; color: white; font-size: 12px; font-weight: 700; padding: 4px 8px; border-radius: 20px; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                    ${percentageOff}% OFF
+                  </div>
+                </div>
+                <h3 style="${pStyle}; font-size: 16px; font-weight: 600; color: #1e293b; margin: 0 0 12px 0; line-height: 1.4; text-align: center;">
                   ${displayTitle}
                 </h3>
                 ${price ? `
-                <div style="margin-bottom: 12px;">
-                  <span style="font-size: 18px; font-weight: 700; color: #b12704; margin-right: 8px;">${price}</span>
-                  ${originalPrice ? `<span style="font-size: 14px; color: #565959; text-decoration: line-through;">${originalPrice}</span>` : ''}
+                <div style="margin-bottom: 16px; text-align: center;">
+                  <span style="font-size: 18px; font-weight: 700; color: #059669; margin-right: 8px;">$${price}</span>
+                  ${originalPrice ? `<span style="font-size: 14px; color: #64748b; text-decoration: line-through;">$${originalPrice}</span>` : ''}
                 </div>
                 ` : ''}
-                <div style="margin-bottom: 15px;">
-                  <span style="color: #cc0c39; font-size: 14px; font-weight: 600;">
-                    You Save: ${percentageOff}%
+                <div style="margin-bottom: 16px; text-align: center;">
+<span style="display:inline-block; background:linear-gradient(135deg, ${discountColor}, #dc2626); color:white; padding:6px 12px; border-radius:20px; font-size:14px; font-weight:600;">                    Save ${percentageOff}%
                   </span>
                 </div>
-                <a href="${link}" style="${aStyle}; display: inline-block; padding: 8px 16px; border: ${finalButtonBorder}; background: ${finalButtonBackground}; color: ${finalButtonTextColor || '#0f1111'}; border-radius: 3px; text-decoration: none; font-weight: 600; font-size: 13px; border: 1px solid #fcd200; cursor: pointer;">
+                <a href="${link}" style="${aStyle}; display: inline-block; padding: 12px 24px; border: ${finalButtonBorder}; background: linear-gradient(135deg, ${finalButtonBackground}, #4f46e5); color: ${finalButtonTextColor}; border-radius: 8px; text-decoration: none; font-weight: 600; font-size: 14px; transition: all 0.2s; box-shadow: 0 2px 4px rgba(99, 102, 241, 0.2);">
                   ${buttonText}
                 </a>
               </td>
@@ -439,34 +436,55 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
   }).join('');
 
   return `
-  <body style="Margin:0;padding:0;background-color:${bodyBackgroundColor};">
-    <!--[if mso]>
-    <style type="text/css">
-      table { border-collapse: collapse; }
-      .product-img { width: 140px !important; height: 140px !important; }
+  <body style="Margin:0;padding:0;background: linear-gradient(135deg, ${bodyBackgroundColor}, #e2e8f0);">
+    <style>
+      @media screen and (max-width: 640px) {
+        .desktop-table { display: none !important; }
+        .mobile-table { display: table !important; }
+        .main-container { width: 100% !important; padding: 10px !important; }
+        .header-container { padding: 20px 15px !important; }
+        .product-container { padding: 15px !important; }
+      }
+      
+      @media screen and (min-width: 641px) {
+        .desktop-table { display: table !important; }
+        .mobile-table { display: none !important; }
+      }
+      
+      .product-img, .product-img-mobile {
+        border: 0 !important;
+        outline: none !important;
+        text-decoration: none !important;
+        -ms-interpolation-mode: bicubic !important;
+      }
+      
+      a:hover {
+        opacity: 0.9 !important;
+        transform: translateY(-1px) !important;
+      }
     </style>
-    <![endif]-->
     
     <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin: 0; padding: 20px 0;">
       <tr>
         <td align="center">
-          <table role="presentation" width="640" border="0" cellspacing="0" cellpadding="0" style="max-width: 640px; width: 100%; margin: 0 auto; background: transparent;">
+          <table role="presentation" width="640" border="0" cellspacing="0" cellpadding="0" class="main-container" style="max-width: 640px; width: 100%; margin: 0 auto; background: transparent;">
             
             ${titleLine1 ? `
             <tr>
-              <td style="padding: 25px 20px; text-align: center; background: ${titleBackgroundColor}; color: white;">
-                <h1 style="${h4Style}; font-size: 24px; font-weight: 400; color: white; margin: 0; font-family: 'Amazon Ember', Arial, sans-serif;">
+              <td class="header-container" style="padding: 30px 20px; text-align: center; background: linear-gradient(135deg, ${titleBackgroundColor}, #4f46e5); border-radius: 16px 16px 0 0; position: relative; overflow: hidden;">
+                <div style="position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: url('data:image/svg+xml,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 100 100\"><defs><pattern id=\"grain\" width=\"100\" height=\"100\" patternUnits=\"userSpaceOnUse\"><circle cx=\"50\" cy=\"50\" r=\"1\" fill=\"white\" opacity=\"0.1\"/></pattern></defs><rect width=\"100\" height=\"100\" fill=\"url(%23grain)\"/></svg>'); opacity: 0.1;"></div>
+                <h1 style="${h4Style}; font-size: 28px; font-weight: 700; color: white; margin: 0; text-shadow: 0 2px 4px rgba(0,0,0,0.1); position: relative; z-index: 1;">
                   ${titleLine1}
                 </h1>
-                <p style="color: #cccccc; margin: 5px 0 0 0; font-size: 14px; font-family: 'Amazon Ember', Arial, sans-serif;">
-                  Great deals, delivered daily
+                <p style="color: rgba(255,255,255,0.9); margin: 8px 0 0 0; font-size: 16px; position: relative; z-index: 1;">
+                  Exclusive deals curated just for you
                 </p>
               </td>
             </tr>
             ` : ''}
             
             <tr>
-              <td style="padding: 20px; background: white;">
+              <td class="product-container" style="padding: 24px; background: white; ${!titleLine1 ? 'border-radius: 16px 16px 0 0;' : ''}">
                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
                   ${productRows}
                 </table>
@@ -475,25 +493,25 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
             
             <!-- Footer -->
             <tr>
-              <td style="padding: 20px; text-align: center; background: #232f3e; color: white;">
+              <td style="padding: 30px 20px; text-align: center; background: linear-gradient(135deg, #1e293b, #334155); border-radius: 0 0 16px 16px;">
                 <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin: auto;">
                   <tr>
                     <td style="vertical-align: middle; padding-right: 12px;">
-                      <span style="font-size: 14px; color: #cccccc; font-weight: 400; font-family: 'Amazon Ember', Arial, sans-serif;">
+                      <span style="font-size: 16px; color: rgba(255,255,255,0.8); font-weight: 500;">
                         Powered by
                       </span>
                     </td>
                     <td style="vertical-align: middle;">
                       <a href="https://datadyno.co/user/deals" target="_blank" style="display: inline-block; text-decoration: none;">
-                        <img src="https://res.cloudinary.com/dh5pf5on1/image/upload/v1747049158/temp/hff1b0ossms0dvgofjkz.png" alt="DataDyno" style="width: 100px; height: auto; display: block; border: 0;" />
+                        <img src="https://res.cloudinary.com/dh5pf5on1/image/upload/v1747049158/temp/hff1b0ossms0dvgofjkz.png" alt="DataDyno" style="width: 120px; height: auto; display: block; border: 0; filter: brightness(0) invert(1);" />
                       </a>
                     </td>
                   </tr>
                 </table>
-                <p style="color: #999999; font-size: 11px; margin: 12px 0 0 0; line-height: 1.4; font-family: 'Amazon Ember', Arial, sans-serif;">
+                <p style="color: rgba(255,255,255,0.6); font-size: 12px; margin: 16px 0 0 0; line-height: 1.4;">
                   © 2025 DataDyno. All rights reserved.<br>
-                  <a href="#" style="color: #999999; text-decoration: none;">Unsubscribe</a> | 
-                  <a href="#" style="color: #999999; text-decoration: none;">Privacy Policy</a>
+                  <a href="#" style="color: rgba(255,255,255,0.8); text-decoration: none;">Unsubscribe</a> | 
+                  <a href="#" style="color: rgba(255,255,255,0.8); text-decoration: none;">Privacy Policy</a>
                 </p>
               </td>
             </tr>
