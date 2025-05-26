@@ -298,15 +298,15 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
   const {
     affiliateTag,
     titleLine1 = '',
-    titleBackgroundColor = '#FF9900',          // Amazon orange
+    titleBackgroundColor = '#c2c2f7',
     buttonText = 'SHOP NOW',
     buttonStyle = 'solid',
-    buttonBackground = '#FF9900',              // Amazon orange
+    buttonBackground = '#6366f1',
     buttonTextColor,
-    cardBackgroundColor = '#FFFFFF',           // white cards
-    discountColor = '#B12704',                  // Amazon deal red/dark red
-    imageBackgroundColor = '#F3F3F3',          // light gray background behind images
-    bodyBackgroundColor = '#FFFFFF',            // white background
+    cardBackgroundColor = '#ffffff',
+    discountColor = 'red',
+    imageBackgroundColor = '',
+    bodyBackgroundColor = '#ffffff',
   } = settings;
 
   // Only extract font-family as inline style string, if it exists
@@ -382,7 +382,7 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
       return `
         <td width="33.33%" style="padding: 10px; text-align: center; vertical-align: top;">
           <div style="background: ${cardBackgroundColor}; padding: 12px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); position: relative; height: 320px; display: flex; flex-direction: column; justify-content: space-between;">
-            <div style="position: relative; background: ${imageBackgroundColor}; border-radius: 4px;">
+            <div style="position: relative; background: ${imageBackgroundColor || 'transparent'}; border-radius: 4px;">
               <img src="${image}" alt="${title}" class="datadyno-img" />
               <div style="position: absolute; top: 8px; right: 8px; background: ${discountColor}; color: white; font-size: 14px; font-weight: bold; padding: 2px 6px; border-radius: 3px;">
                 ${percentageOff}% OFF
@@ -399,27 +399,24 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
               overflow: hidden;
               height: 88px;
               line-height: 22px;
-              color: #111;  /* dark text */
             ">
               ${displayTitle}
             </p>
             <a href="${link}" style="
               ${aStyle};
               display: inline-block;
-              padding: 10px 16px;
+              padding: 8px 14px;
               border: ${finalButtonBorder};
               background: ${finalButtonBackground};
               color: ${finalButtonTextColor};
               border-radius: 5px;
               text-decoration: none;
-              font-weight: 700;
+              font-weight: 600;
               font-size: 14px;
               text-align: center;
               width: 100%;
               box-sizing: border-box;
-              box-shadow: 0 2px 4px rgba(255,153,0,0.5);
-              transition: background-color 0.3s ease;
-            " onmouseover="this.style.backgroundColor='#cc7a00';" onmouseout="this.style.backgroundColor='${finalButtonBackground}';">
+            ">
               ${buttonText}
             </a>
           </div>
@@ -436,7 +433,7 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
   }
 
   return `
-  <body style="Margin:0;padding:0;background-color:${bodyBackgroundColor}; font-family: Arial, sans-serif;">
+  <body style="Margin:0;padding:0;background-color:${bodyBackgroundColor};">
     <style>
       img.datadyno-img {
         width: 119px !important;
@@ -448,22 +445,13 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
         background-color: #fff !important;
         box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08) !important;
       }
-      h4 {
-        color: #111;  /* dark text for titles */
-        font-weight: 700;
-        margin: 0;
-        font-size: 20px;
-      }
-      a:hover {
-        cursor: pointer;
-      }
     </style>
     <table role="presentation" width="90%" border="0" cellspacing="0" cellpadding="0" style="margin: auto;">
-      ${titleLine1 ? `<tr>
+      ${titleLine1 && `<tr>
         <td align="center" style="padding: 20px 10px; background: ${titleBackgroundColor};">
           <h4 style="${h4Style}">${titleLine1}</h4>
         </td>
-      </tr>` : ''}
+      </tr>`}
       <tr>
         <td align="center" style="padding: 20px 0;">
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
@@ -476,7 +464,7 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
           <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin: auto;">
             <tr>
               <td style="vertical-align: middle; padding-right: 10px;">
-                <span style="font-size: 18px; color: #111;">
+                <span style="font-size: 18px;">
                   Powered by
                 </span>
               </td>
