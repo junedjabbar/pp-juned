@@ -298,45 +298,64 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
   const {
     affiliateTag,
     titleLine1 = '',
-    titleBackgroundColor = '#FF9900',  // Amazon orange
+    titleBackgroundColor = '#146eb4', // Amazon blue
     buttonText = 'SHOP NOW',
     buttonStyle = 'solid',
-    buttonBackground = '#FF9900',      // Amazon orange
+    buttonBackground = '#ff9900', // Amazon orange
     buttonTextColor,
-    cardBackgroundColor = '#FFFFFF',
-    discountColor = '#FF0000',         // keep %OFF red
-    imageBackgroundColor = '#FFFFFF',
-    bodyBackgroundColor = '#FFFFFF',
+    cardBackgroundColor = '#ffffff',
+    discountColor = 'red',
+    imageBackgroundColor = '',
+    bodyBackgroundColor = '#ffffff',
   } = settings;
 
-  // Style extractors (only font-family for p, h2, a)
-  const fontFamilyStyle = styleObj => styleObj?.fontFamily ? `font-family: ${styleObj.fontFamily};` : '';
+  const fontFamilyStyle = styleObj => {
+    if (styleObj && styleObj.fontFamily) {
+      return `font-family: ${styleObj.fontFamily}`;
+    }
+    return '';
+  };
 
-  const pTitleStyle = (styleObj) => {
-    // Extract only font-family, color, font-weight, font-size
+  const productTitleStyles = (styleObj) => {
+    const keysToKeep = ['fontFamily', 'color'];
+    return Object.entries(styleObj || {})
+        .filter(([key]) => keysToKeep.includes(key))
+        .map(([key, value]) => {
+          if (key === 'fontSize' && typeof value === 'number') {
+            return `font-size: ${value}px`;
+          }
+          const cssKey = key.replace(/[A-Z]/g, m => '-' + m.toLowerCase());
+          return `${cssKey}: ${value}`;
+        })
+        .join('; ');
+  };
+
+  const extractSelectedStyles = (styleObj) => {
     const keysToKeep = ['fontFamily', 'fontSize', 'color', 'fontWeight'];
     return Object.entries(styleObj || {})
         .filter(([key]) => keysToKeep.includes(key))
         .map(([key, value]) => {
           if (key === 'fontSize' && typeof value === 'number') {
-            return `font-size: ${value}px;`;
+            return `font-size: ${value}px`;
           }
           const cssKey = key.replace(/[A-Z]/g, m => '-' + m.toLowerCase());
-          return `${cssKey}: ${value};`;
+          return `${cssKey}: ${value}`;
         })
-        .join(' ');
+        .join('; ');
   };
 
   const pStyle = fontFamilyStyle(tagStyles.p);
-  const h4Style = pTitleStyle(tagStyles.h4);
+  const h2Style = fontFamilyStyle(tagStyles.h2);
   const aStyle = fontFamilyStyle(tagStyles.a);
+  const h4Style = extractSelectedStyles(tagStyles.h4);
+  const pTitleSyle = productTitleStyles(tagStyles.p);
 
   const isOutline = buttonStyle === 'outline';
   const finalButtonBackground = isOutline ? 'transparent' : buttonBackground;
   const finalButtonBorder = isOutline ? `1px solid ${buttonBackground}` : 'none';
   const finalButtonTextColor = isOutline
       ? (buttonTextColor || buttonBackground)
-      : (buttonTextColor || '#FFFFFF');
+      : (buttonTextColor || '#ffffff');
 
   const truncate = (text, fontSizePx = 14, containerWidthPx = 180, lines = 2) => {
     const avgCharWidth = fontSizePx * 0.5;
@@ -347,7 +366,6 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
 
   const filteredProducts = products.slice(0, 9);
   const rows = [];
-
   for (let i = 0; i < filteredProducts.length; i += 3) {
     const rowItems = filteredProducts.slice(i, i + 3).map(product => {
       const {
@@ -358,54 +376,56 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
       } = product;
 
       const link = affiliateTag ? url.replace('getpoln-20', affiliateTag) : url;
-      const displayTitle = truncate(title, 14, 180, 2);
+      const displayTitle = truncate(title, 10, 120, 2);
 
       return `
-        <td width="33.33%" valign="top" style="padding: 10px;">
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background: ${cardBackgroundColor}; border-radius: 6px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); border: 1px solid #ddd; height: 320px;">
-            <tr>
-              <td style="background: ${imageBackgroundColor}; padding: 12px; text-align: center; border-radius: 6px 6px 0 0;">
-                <img src="${image}" alt="${title}" width="140" height="140" style="display: block; margin: 0 auto; object-fit: contain; border-radius: 6px; background-color: #fff; box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);" />
-                <div style="position: relative; margin-top: -30px; text-align: right;">
-                  <span style="background: ${discountColor}; color: #fff; font-size: 14px; font-weight: 700; padding: 4px 8px; border-radius: 4px;">
-                    ${percentageOff}% OFF
-                  </span>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td style="padding: 12px 15px; text-align: center; font-weight: 600; font-size: 16px; color: #111; font-family: Arial, sans-serif; min-height: 60px; line-height: 1.3;">
-                ${displayTitle}
-              </td>
-            </tr>
-            <tr>
-              <td style="padding: 10px 15px; text-align: center;">
-                <a href="${link}" target="_blank" style="display: inline-block; padding: 10px 20px; background: ${finalButtonBackground}; border: ${finalButtonBorder}; color: ${finalButtonTextColor}; border-radius: 4px; font-weight: 700; font-family: Arial, sans-serif; font-size: 14px; text-decoration: none;">
-                  ${buttonText}
-                </a>
-              </td>
-            </tr>
-          </table>
+        <td width="33.33%" style="padding: 10px; text-align: center; vertical-align: top;">
+          <div style="background: ${cardBackgroundColor}; padding: 12px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); position: relative; height: 330px; display: flex; flex-direction: column; justify-content: space-between;">
+            <div style="position: relative; background: ${imageBackgroundColor || 'transparent'}; border-radius: 4px;">
+              <img src="${image}" alt="${title}" class="datadyno-img" />
+              <div style="position: absolute; top: 8px; right: 8px; background: ${discountColor}; color: white; font-size: 14px; font-weight: bold; padding: 2px 6px; border-radius: 3px;">
+                ${percentageOff}% OFF
+              </div>
+            </div>
+            <p style="${pTitleSyle}; margin: 12px auto 8px; max-width: 180px; word-wrap: break-word; flex-grow: 0;">
+              ${displayTitle}
+            </p>
+            <a href="${link}" style="${aStyle}; display: inline-block; padding: 8px 14px; border: ${finalButtonBorder}; background: ${finalButtonBackground}; color: ${finalButtonTextColor}; border-radius: 5px; text-decoration: none; font-weight: bold;">
+              ${buttonText}
+            </a>
+          </div>
         </td>
       `;
     }).join('');
 
     const columnCount = filteredProducts.slice(i, i + 3).length;
-    const emptyCells = 3 - columnCount;
-    const emptyHtml = '<td width="33.33%" style="padding: 10px;"></td>'.repeat(emptyCells);
+    const totalColumns = 3;
+    const emptyCells = totalColumns - columnCount;
+    const emptyHtml = '<td width="33.33%"></td>'.repeat(Math.floor(emptyCells / 2));
 
-    rows.push(`<tr>${rowItems}${emptyHtml}</tr>`);
+    rows.push(`<tr>${emptyHtml}${rowItems}${emptyHtml}</tr>`);
   }
 
   return `
-  <body style="margin:0; padding:0; background-color: ${bodyBackgroundColor};">
-    <table role="presentation" width="90%" border="0" cellspacing="0" cellpadding="0" align="center" style="margin: auto; font-family: Arial, sans-serif;">
-      ${titleLine1 ? `
-      <tr>
-        <td align="center" style="padding: 20px 10px; background-color: ${titleBackgroundColor}; color: #fff; font-size: 24px; font-weight: 700;">
-          ${titleLine1}
+  <body style="Margin:0;padding:0;background-color:${bodyBackgroundColor};">
+    <style>
+      img.datadyno-img {
+        width: 119px !important;
+        height: 122px !important;
+        display: block !important;
+        margin: 0 auto !important;
+        object-fit: contain !important;
+        border-radius: 6px !important;
+        background-color: #fff !important;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08) !important;
+      }
+    </style>
+    <table role="presentation" width="90%" border="0" cellspacing="0" cellpadding="0" style="margin: auto;">
+      ${titleLine1 && `<tr>
+        <td align="center" style="padding: 20px 10px; background: ${titleBackgroundColor};">
+          <h4 style="${h4Style} color: #fff; margin: 0;">${titleLine1}</h4>
         </td>
-      </tr>` : ''}
+      </tr>`}
       <tr>
         <td align="center" style="padding: 20px 0;">
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
@@ -417,12 +437,14 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
         <td align="center" style="padding: 30px 10px;">
           <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin: auto;">
             <tr>
-              <td style="vertical-align: middle; padding-right: 10px; font-size: 14px; color: #555;">
-                Powered by
+              <td style="vertical-align: middle; padding-right: 10px;">
+                <span style="font-size: 18px;">
+                  Powered by
+                </span>
               </td>
               <td style="vertical-align: middle;">
-                <a href="https://datadyno.co/user/deals" target="_blank" style="text-decoration: none;">
-                  <img src="https://res.cloudinary.com/dh5pf5on1/image/upload/v1747049158/temp/hff1b0ossms0dvgofjkz.png" alt="Brand Logo" width="130" height="35" style="display: block; border: 0;" />
+                <a href="https://datadyno.co/user/deals" target="_blank" style="display: inline-block; text-decoration: none;">
+                  <img src="https://res.cloudinary.com/dh5pf5on1/image/upload/v1747049158/temp/hff1b0ossms0dvgofjkz.png" alt="Brand Logo" style="width: 130px; height: 35px; display: block; border: 0;" />
                 </a>
               </td>
             </tr>
