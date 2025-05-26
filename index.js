@@ -450,7 +450,7 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
     <table role="presentation" width="90%" border="0" cellspacing="0" cellpadding="0" style="margin: auto;">
       ${titleLine1 && `<tr>
         <td align="center" style="padding: 20px 10px; background: ${titleBackgroundColor};">
-          <h4 style="${h4Style} color: #fff; margin: 0;">${titleLine1}</h4>
+          <h4 style="color: #ffffff; margin: 0;${h4Style.replace(/color:[^;]+;?/, '')}">${titleLine1}</h4>
         </td>
       </tr>`}
       <tr>
