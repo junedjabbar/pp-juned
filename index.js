@@ -387,7 +387,7 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
       } = product;
 
       const link = affiliateTag ? url.replace('getpoln-20', affiliateTag) : url;
-      const displayTitle = truncate(title, 10, 120, 2);
+      const displayTitle = truncate(title, 10, 80, 2);
 
       return `
         <td width="33.33%" style="padding: 10px; text-align: center;">
