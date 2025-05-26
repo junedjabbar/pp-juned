@@ -301,7 +301,7 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
     titleBackgroundColor = '#232f3e',
     buttonText = 'SHOP NOW',
     buttonStyle = 'solid',
-    buttonBackground = '#ffd814', // Amazon Yellow
+    buttonBackground = '#ff9900',
     buttonTextColor,
     cardBackgroundColor = '#ffffff',
     discountColor = '#cc0c39',
@@ -309,17 +309,22 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
     bodyBackgroundColor = '#eaeded',
   } = settings;
 
-  const fontFamilyStyle = styleObj =>
-      styleObj?.fontFamily
-          ? `font-family: ${styleObj.fontFamily}`
-          : 'font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
+  // Extract font styles
+  const fontFamilyStyle = styleObj => {
+    if (styleObj && styleObj.fontFamily) {
+      return `font-family: ${styleObj.fontFamily}`;
+    }
+    return 'font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif';
+  };
 
-  const extractSelectedStyles = styleObj => {
+  const extractSelectedStyles = (styleObj) => {
     const keysToKeep = ['fontFamily', 'fontSize', 'color', 'fontWeight'];
     return Object.entries(styleObj || {})
         .filter(([key]) => keysToKeep.includes(key))
         .map(([key, value]) => {
-          if (key === 'fontSize' && typeof value === 'number') return `font-size: ${value}px`;
+          if (key === 'fontSize' && typeof value === 'number') {
+            return `font-size: ${value}px`;
+          }
           const cssKey = key.replace(/[A-Z]/g, m => '-' + m.toLowerCase());
           return `${cssKey}: ${value}`;
         })
@@ -327,6 +332,7 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
   };
 
   const pStyle = fontFamilyStyle(tagStyles.p);
+  const h2Style = fontFamilyStyle(tagStyles.h2);
   const aStyle = fontFamilyStyle(tagStyles.a);
   const h4Style = extractSelectedStyles(tagStyles.h4);
 
@@ -335,29 +341,27 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
   const finalButtonBorder = isOutline ? `2px solid ${buttonBackground}` : 'none';
   const finalButtonTextColor = isOutline
       ? (buttonTextColor || buttonBackground)
-      : (buttonTextColor || '#0f1111');
+      : (buttonTextColor || '#ffffff');
 
   const truncate = (text, maxLength = 100) => {
-    if (!text) return '';
-    return text.length <= maxLength ? text : text.substring(0, maxLength - 3).trim() + '...';
+    if (text.length <= maxLength) return text;
+    return text.substring(0, maxLength - 3).trim() + '...';
   };
 
   const filteredProducts = products.slice(0, 9);
 
-  const productRows = filteredProducts.map(product => {
+  const productRows = filteredProducts.map((product, index) => {
     const {
-      title = '',
-      image,
-      percentageOff,
+      title = product?.title,
+      image = product?.image,
+      percentageOff = product?.percentage,
       url,
       price,
       originalPrice,
     } = product;
 
     const link = affiliateTag ? url.replace('getpoln-20', affiliateTag) : url;
-    const displayTitle = truncate(title, 100);
-
-    const titleCommonStyles = `${pStyle}; font-size: 16px; font-weight: 500; color: #0f1111; margin: 0 0 8px 0; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;`;
+    const displayTitle = truncate(title, 80);
 
     return `
       <tr>
@@ -374,22 +378,27 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
                 <div style="position: absolute; top: 15px; right: 15px; background: ${discountColor}; color: white; font-size: 12px; font-weight: 700; padding: 4px 8px; border-radius: 3px;">
                   ${percentageOff}% OFF
                 </div>
-                <h3 style="${titleCommonStyles}">${displayTitle}</h3>
+                <h3 style="${pStyle}; font-size: 16px; font-weight: 500; color: #0f1111; margin: 0 0 8px 0; line-height: 1.3; padding-right: 80px;">
+                  ${displayTitle}
+                </h3>
                 ${price ? `
                 <div style="margin-bottom: 12px;">
                   <span style="font-size: 18px; font-weight: 700; color: #b12704; margin-right: 8px;">${price}</span>
                   ${originalPrice ? `<span style="font-size: 14px; color: #565959; text-decoration: line-through;">${originalPrice}</span>` : ''}
-                </div>` : ''}
-                <div style="margin-bottom: 15px;">
-                  <span style="color: ${discountColor}; font-size: 14px; font-weight: 600;">You Save: ${percentageOff}%</span>
                 </div>
-                <a href="${link}" style="${aStyle}; display: inline-block; padding: 8px 16px; border: ${finalButtonBorder}; background: ${finalButtonBackground}; color: ${finalButtonTextColor}; border-radius: 3px; text-decoration: none; font-weight: 600; font-size: 13px; cursor: pointer;">
+                ` : ''}
+                <div style="margin-bottom: 15px;">
+                  <span style="color: #cc0c39; font-size: 14px; font-weight: 600;">
+                    You Save: ${percentageOff}%
+                  </span>
+                </div>
+                <a href="${link}" style="${aStyle}; display: inline-block; padding: 8px 16px; border: ${finalButtonBorder}; background: ${finalButtonBackground}; color: ${finalButtonTextColor || '#0f1111'}; border-radius: 3px; text-decoration: none; font-weight: 600; font-size: 13px; border: 1px solid #fcd200; cursor: pointer;">
                   ${buttonText}
                 </a>
               </td>
             </tr>
           </table>
-
+          
           <!-- Mobile Layout -->
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="mobile-table" style="background: ${cardBackgroundColor}; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: 1px solid #d5dbdb; display: none;">
             <tr>
@@ -404,16 +413,21 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
             </tr>
             <tr>
               <td style="padding: 20px; text-align: center;">
-                <h3 style="${titleCommonStyles}">${displayTitle}</h3>
+                <h3 style="${pStyle}; font-size: 16px; font-weight: 500; color: #0f1111; margin: 0 0 12px 0; line-height: 1.3;">
+                  ${displayTitle}
+                </h3>
                 ${price ? `
                 <div style="margin-bottom: 12px;">
                   <span style="font-size: 18px; font-weight: 700; color: #b12704; margin-right: 8px;">${price}</span>
                   ${originalPrice ? `<span style="font-size: 14px; color: #565959; text-decoration: line-through;">${originalPrice}</span>` : ''}
-                </div>` : ''}
-                <div style="margin-bottom: 15px;">
-                  <span style="color: ${discountColor}; font-size: 14px; font-weight: 600;">You Save: ${percentageOff}%</span>
                 </div>
-                <a href="${link}" style="${aStyle}; display: inline-block; padding: 8px 16px; border: ${finalButtonBorder}; background: ${finalButtonBackground}; color: ${finalButtonTextColor}; border-radius: 3px; text-decoration: none; font-weight: 600; font-size: 13px; cursor: pointer;">
+                ` : ''}
+                <div style="margin-bottom: 15px;">
+                  <span style="color: #cc0c39; font-size: 14px; font-weight: 600;">
+                    You Save: ${percentageOff}%
+                  </span>
+                </div>
+                <a href="${link}" style="${aStyle}; display: inline-block; padding: 8px 16px; border: ${finalButtonBorder}; background: ${finalButtonBackground}; color: ${finalButtonTextColor || '#0f1111'}; border-radius: 3px; text-decoration: none; font-weight: 600; font-size: 13px; border: 1px solid #fcd200; cursor: pointer;">
                   ${buttonText}
                 </a>
               </td>
@@ -432,12 +446,12 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
       .product-img { width: 140px !important; height: 140px !important; }
     </style>
     <![endif]-->
-
+    
     <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin: 0; padding: 20px 0;">
       <tr>
         <td align="center">
           <table role="presentation" width="640" border="0" cellspacing="0" cellpadding="0" style="max-width: 640px; width: 100%; margin: 0 auto; background: transparent;">
-
+            
             ${titleLine1 ? `
             <tr>
               <td style="padding: 25px 20px; text-align: center; background: ${titleBackgroundColor}; color: white;">
@@ -448,8 +462,9 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
                   Great deals, delivered daily
                 </p>
               </td>
-            </tr>` : ''}
-
+            </tr>
+            ` : ''}
+            
             <tr>
               <td style="padding: 20px; background: white;">
                 <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0">
@@ -457,7 +472,8 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
                 </table>
               </td>
             </tr>
-
+            
+            <!-- Footer -->
             <tr>
               <td style="padding: 20px; text-align: center; background: #232f3e; color: white;">
                 <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin: auto;">
@@ -481,7 +497,7 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
                 </p>
               </td>
             </tr>
-
+            
           </table>
         </td>
       </tr>
