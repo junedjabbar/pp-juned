@@ -298,7 +298,7 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
   const {
     affiliateTag,
     titleLine1 = '',
-    titleBackgroundColor = '#146eb4', // Amazon blue
+    titleBackgroundColor = '#232F3E', // Amazon blue
     buttonText = 'SHOP NOW',
     buttonStyle = 'solid',
     buttonBackground = '#ff9900', // Amazon orange
