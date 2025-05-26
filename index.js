@@ -356,31 +356,63 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
 
     const link = affiliateTag ? url.replace('getpoln-20', affiliateTag) : url;
     const displayTitle = truncate(title, 100);
-    const hasDiscount = percentageOff !== undefined && percentageOff !== null;
+
+    const titleCommonStyles = `${pStyle}; font-size: 16px; font-weight: 500; color: #0f1111; margin: 0 0 8px 0; line-height: 1.3; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;`;
 
     return `
       <tr>
         <td style="padding: 0 0 20px 0;">
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background: ${cardBackgroundColor}; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: 1px solid #d5dbdb;">
+          <!-- Desktop Layout -->
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="desktop-table" style="background: ${cardBackgroundColor}; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: 1px solid #d5dbdb;">
             <tr>
-              <td width="200" style="padding: 20px; text-align: center; background: #f7f8f8; border-right: 1px solid #e7e7e7;">
+              <td width="200" style="padding: 20px; vertical-align: middle; text-align: center; background: #f7f8f8; border-right: 1px solid #e7e7e7;">
                 <div style="background: ${imageBackgroundColor}; padding: 15px; border-radius: 4px; border: 1px solid #e7e7e7;">
-                  <img src="${image}" alt="${title}" style="width: 140px; height: 140px; object-fit: contain; display: block; margin: 0 auto;" />
+                  <img src="${image}" alt="${title}" class="product-img" style="width: 140px; height: 140px; object-fit: contain; display: block; margin: 0 auto;" />
                 </div>
               </td>
-              <td style="padding: 20px; vertical-align: middle;">
-                <h3 style="${pStyle}; font-size: 16px; font-weight: 500; color: #0f1111; margin: 0 0 8px 0; line-height: 1.3;">
-                  ${displayTitle}
-                </h3>
+              <td style="padding: 20px; vertical-align: middle; position: relative;">
+                <div style="position: absolute; top: 15px; right: 15px; background: ${discountColor}; color: white; font-size: 12px; font-weight: 700; padding: 4px 8px; border-radius: 3px;">
+                  ${percentageOff}% OFF
+                </div>
+                <h3 style="${titleCommonStyles}">${displayTitle}</h3>
                 ${price ? `
                 <div style="margin-bottom: 12px;">
                   <span style="font-size: 18px; font-weight: 700; color: #b12704; margin-right: 8px;">${price}</span>
                   ${originalPrice ? `<span style="font-size: 14px; color: #565959; text-decoration: line-through;">${originalPrice}</span>` : ''}
                 </div>` : ''}
-                ${hasDiscount ? `
                 <div style="margin-bottom: 15px;">
                   <span style="color: ${discountColor}; font-size: 14px; font-weight: 600;">You Save: ${percentageOff}%</span>
+                </div>
+                <a href="${link}" style="${aStyle}; display: inline-block; padding: 8px 16px; border: ${finalButtonBorder}; background: ${finalButtonBackground}; color: ${finalButtonTextColor}; border-radius: 3px; text-decoration: none; font-weight: 600; font-size: 13px; cursor: pointer;">
+                  ${buttonText}
+                </a>
+              </td>
+            </tr>
+          </table>
+
+          <!-- Mobile Layout -->
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" class="mobile-table" style="background: ${cardBackgroundColor}; border-radius: 8px; overflow: hidden; box-shadow: 0 2px 4px rgba(0,0,0,0.1); border: 1px solid #d5dbdb; display: none;">
+            <tr>
+              <td style="padding: 20px; text-align: center; position: relative; background: #f7f8f8; border-bottom: 1px solid #e7e7e7;">
+                <div style="position: absolute; top: 10px; right: 10px; background: ${discountColor}; color: white; font-size: 12px; font-weight: 700; padding: 4px 8px; border-radius: 3px;">
+                  ${percentageOff}% OFF
+                </div>
+                <div style="background: ${imageBackgroundColor}; padding: 15px; border-radius: 4px; border: 1px solid #e7e7e7; display: inline-block;">
+                  <img src="${image}" alt="${title}" class="product-img-mobile" style="width: 120px; height: 120px; object-fit: contain; display: block;" />
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td style="padding: 20px; text-align: center;">
+                <h3 style="${titleCommonStyles}">${displayTitle}</h3>
+                ${price ? `
+                <div style="margin-bottom: 12px;">
+                  <span style="font-size: 18px; font-weight: 700; color: #b12704; margin-right: 8px;">${price}</span>
+                  ${originalPrice ? `<span style="font-size: 14px; color: #565959; text-decoration: line-through;">${originalPrice}</span>` : ''}
                 </div>` : ''}
+                <div style="margin-bottom: 15px;">
+                  <span style="color: ${discountColor}; font-size: 14px; font-weight: 600;">You Save: ${percentageOff}%</span>
+                </div>
                 <a href="${link}" style="${aStyle}; display: inline-block; padding: 8px 16px; border: ${finalButtonBorder}; background: ${finalButtonBackground}; color: ${finalButtonTextColor}; border-radius: 3px; text-decoration: none; font-weight: 600; font-size: 13px; cursor: pointer;">
                   ${buttonText}
                 </a>
@@ -394,15 +426,27 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
 
   return `
   <body style="Margin:0;padding:0;background-color:${bodyBackgroundColor};">
+    <!--[if mso]>
+    <style type="text/css">
+      table { border-collapse: collapse; }
+      .product-img { width: 140px !important; height: 140px !important; }
+    </style>
+    <![endif]-->
+
     <table role="presentation" width="100%" border="0" cellspacing="0" cellpadding="0" style="margin: 0; padding: 20px 0;">
       <tr>
         <td align="center">
           <table role="presentation" width="640" border="0" cellspacing="0" cellpadding="0" style="max-width: 640px; width: 100%; margin: 0 auto; background: transparent;">
+
             ${titleLine1 ? `
             <tr>
               <td style="padding: 25px 20px; text-align: center; background: ${titleBackgroundColor}; color: white;">
-                <h1 style="${h4Style}; font-size: 24px; font-weight: 400; color: white; margin: 0;">${titleLine1}</h1>
-                <p style="color: #cccccc; margin: 5px 0 0 0; font-size: 14px;">Great deals, delivered daily</p>
+                <h1 style="${h4Style}; font-size: 24px; font-weight: 400; color: white; margin: 0; font-family: 'Amazon Ember', Arial, sans-serif;">
+                  ${titleLine1}
+                </h1>
+                <p style="color: #cccccc; margin: 5px 0 0 0; font-size: 14px; font-family: 'Amazon Ember', Arial, sans-serif;">
+                  Great deals, delivered daily
+                </p>
               </td>
             </tr>` : ''}
 
@@ -419,16 +463,18 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
                 <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin: auto;">
                   <tr>
                     <td style="vertical-align: middle; padding-right: 12px;">
-                      <span style="font-size: 14px; color: #cccccc;">Powered by</span>
+                      <span style="font-size: 14px; color: #cccccc; font-weight: 400; font-family: 'Amazon Ember', Arial, sans-serif;">
+                        Powered by
+                      </span>
                     </td>
                     <td style="vertical-align: middle;">
-                      <a href="https://datadyno.co/user/deals" target="_blank" style="text-decoration: none;">
+                      <a href="https://datadyno.co/user/deals" target="_blank" style="display: inline-block; text-decoration: none;">
                         <img src="https://res.cloudinary.com/dh5pf5on1/image/upload/v1747049158/temp/hff1b0ossms0dvgofjkz.png" alt="DataDyno" style="width: 100px; height: auto; display: block; border: 0;" />
                       </a>
                     </td>
                   </tr>
                 </table>
-                <p style="color: #999999; font-size: 11px; margin: 12px 0 0 0; line-height: 1.4;">
+                <p style="color: #999999; font-size: 11px; margin: 12px 0 0 0; line-height: 1.4; font-family: 'Amazon Ember', Arial, sans-serif;">
                   © 2025 DataDyno. All rights reserved.<br>
                   <a href="#" style="color: #999999; text-decoration: none;">Unsubscribe</a> | 
                   <a href="#" style="color: #999999; text-decoration: none;">Privacy Policy</a>
@@ -440,7 +486,8 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
         </td>
       </tr>
     </table>
-  </body>`;
+  </body>
+  `;
 };
 
 app.post('/debug/html', async (request, response) => {
