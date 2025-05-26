@@ -357,6 +357,7 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
       ? (buttonTextColor || buttonBackground)
       : (buttonTextColor || '#ffffff');
 
+  // truncate is used to limit raw length — keep for safety but CSS will do real truncation
   const truncate = (text, fontSizePx = 14, containerWidthPx = 180, lines = 2) => {
     const avgCharWidth = fontSizePx * 0.5;
     const maxChars = Math.floor((containerWidthPx / avgCharWidth) * lines);
@@ -387,10 +388,36 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
                 ${percentageOff}% OFF
               </div>
             </div>
-            <p style="${pTitleSyle}; margin: 12px auto 8px; max-width: 180px; word-wrap: break-word; flex-grow: 0;">
+            <p style="${pTitleSyle}; margin: 12px auto 8px; max-width: 180px; 
+              overflow: hidden; 
+              text-overflow: ellipsis; 
+              display: -webkit-box; 
+              -webkit-line-clamp: 2; 
+              -webkit-box-orient: vertical; 
+              height: 42px; /* fixed height for 2 lines approx */
+              line-height: 21px;
+              word-wrap: break-word;
+              flex-grow: 0;
+            ">
               ${displayTitle}
             </p>
-            <a href="${link}" style="${aStyle}; display: inline-block; padding: 8px 14px; border: ${finalButtonBorder}; background: ${finalButtonBackground}; color: ${finalButtonTextColor}; border-radius: 5px; text-decoration: none; font-weight: bold;">
+            <a href="${link}" style="${aStyle}; 
+              display: inline-flex; 
+              align-items: center; 
+              justify-content: center;
+              height: 40px; 
+              min-width: 120px;
+              padding: 0 20px; 
+              border: ${finalButtonBorder}; 
+              background: ${finalButtonBackground}; 
+              color: ${finalButtonTextColor}; 
+              border-radius: 5px; 
+              text-decoration: none; 
+              font-weight: bold;
+              font-size: 14px;
+              margin: 0 auto;
+              box-sizing: border-box;
+              ">
               ${buttonText}
             </a>
           </div>
