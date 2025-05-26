@@ -471,7 +471,7 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
               </td>
               <td style="vertical-align: middle;">
                 <a href="https://datadyno.co/user/deals" target="_blank" style="display: inline-block; text-decoration: none;">
-                  <img src="https://res.cloudinary.com/dh5pf5on1/image/upload/v1747049158/temp/hff1b0ossms0dvgofjkz.png" alt="Brand Logo" style="width: 950px; height: 28px; display: block; border: 0;" />
+                  <img src="https://res.cloudinary.com/dh5pf5on1/image/upload/v1747049158/temp/hff1b0ossms0dvgofjkz.png" alt="Brand Logo" style="width: 95px; height: 28px; display: block; border: 0;" />
                 </a>
               </td>
             </tr>
