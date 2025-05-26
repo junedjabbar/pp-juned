@@ -298,139 +298,172 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
   const {
     affiliateTag,
     titleLine1 = '',
-    titleBackgroundColor = '#232F3E', // Amazon dark navy
+    titleBackgroundColor = '#c2c2f7',
     buttonText = 'SHOP NOW',
     buttonStyle = 'solid',
-    buttonBackground = '#FF9900', // Amazon orange
+    buttonBackground = '#6366f1',
     buttonTextColor,
     cardBackgroundColor = '#ffffff',
-    discountColor = '#FF9900', // Amazon orange for discount badge
-    imageBackgroundColor = '#f6f6f6', // subtle gray behind image
+    discountColor = 'red',
+    imageBackgroundColor = '',
     bodyBackgroundColor = '#ffffff',
   } = settings;
 
-  // Extract font-family only for some tags, no complex styles for email
-  const fontFamilyStyle = (styleObj) => {
+  // Only extract font-family as inline style string, if it exists
+  const fontFamilyStyle = styleObj => {
     if (styleObj && styleObj.fontFamily) {
-      return `font-family: ${styleObj.fontFamily};`;
+      return `font-family: ${styleObj.fontFamily}`;
     }
-    return 'font-family: Arial, sans-serif;'; // fallback font for email
+    return '';
+  };
+
+  const productTitleStyles = (styleObj) => {
+    const keysToKeep = ['fontFamily', 'color'];
+    return Object.entries(styleObj || {})
+      .filter(([key]) => keysToKeep.includes(key))
+      .map(([key, value]) => {
+        // fontSize is a number, convert to px
+        if (key === 'fontSize' && typeof value === 'number') {
+          return `font-size: ${value}px`;
+        }
+        // fontWeight can be number or string, just return as-is
+        // fontFamily and color are strings
+        // Convert camelCase to kebab-case for CSS
+        const cssKey = key.replace(/[A-Z]/g, m => '-' + m.toLowerCase());
+        return `${cssKey}: ${value}`;
+      })
+      .join('; ');
+  };
+
+  const extractSelectedStyles = (styleObj) => {
+    const keysToKeep = ['fontFamily', 'fontSize', 'color', 'fontWeight'];
+    return Object.entries(styleObj || {})
+      .filter(([key]) => keysToKeep.includes(key))
+      .map(([key, value]) => {
+        // fontSize is a number, convert to px
+        if (key === 'fontSize' && typeof value === 'number') {
+          return `font-size: ${value}px`;
+        }
+        // fontWeight can be number or string, just return as-is
+        // fontFamily and color are strings
+        // Convert camelCase to kebab-case for CSS
+        const cssKey = key.replace(/[A-Z]/g, m => '-' + m.toLowerCase());
+        return `${cssKey}: ${value}`;
+      })
+      .join('; ');
   };
 
   const pStyle = fontFamilyStyle(tagStyles.p);
   const h2Style = fontFamilyStyle(tagStyles.h2);
   const aStyle = fontFamilyStyle(tagStyles.a);
-  const h4Style = fontFamilyStyle(tagStyles.h4);
+  const h4Style = extractSelectedStyles(tagStyles.h4);
+  const pTitleSyle = productTitleStyles(tagStyles.p)
 
   const isOutline = buttonStyle === 'outline';
   const finalButtonBackground = isOutline ? 'transparent' : buttonBackground;
   const finalButtonBorder = isOutline ? `1px solid ${buttonBackground}` : 'none';
   const finalButtonTextColor = isOutline
-      ? (buttonTextColor || buttonBackground)
-      : (buttonTextColor || '#ffffff');
+    ? (buttonTextColor || buttonBackground)
+    : (buttonTextColor || '#ffffff');
 
-  const truncate = (text, maxLength = 50) => {
-    if (!text) return '';
-    return text.length > maxLength ? text.substring(0, maxLength - 3).trim() + '...' : text;
+  const truncate = (text, fontSizePx = 14, containerWidthPx = 180, lines = 2) => {
+    const avgCharWidth = fontSizePx * 0.5;
+    const maxChars = Math.floor((containerWidthPx / avgCharWidth) * lines);
+    if (text.length <= maxChars) return text;
+    const toReturn = text.substring(0, maxChars - 3).trim() + '...'
+    return toReturn.trim();
   };
 
-  // Limit to 9 products max
   const filteredProducts = products.slice(0, 9);
   const rows = [];
-
-  // For alternating background colors for rows
-  const rowBgColors = ['#ffffff', '#f9f9f9'];
-
   for (let i = 0; i < filteredProducts.length; i += 3) {
-    const rowItems = filteredProducts.slice(i, i + 3).map((product, idx) => {
+    const rowItems = filteredProducts.slice(i, i + 3).map(product => {
+
       const {
-        title = product?.title || '',
-        image = product?.image || '',
-        percentageOff = product?.percentage || 0,
-        url = '#',
+        title = product?.title,
+        image = product?.image,
+        percentageOff = product?.percentage,
+        url,
       } = product;
 
       const link = affiliateTag ? url.replace('getpoln-20', affiliateTag) : url;
-      const displayTitle = truncate(title, 50);
+      const displayTitle = truncate(title, 10, 120, 2);
 
-      // fixed height for card to align all cards
-      // Use a table inside the cell for layout with fixed height (350px approx)
       return `
-        <td width="33.33%" valign="top" style="padding: 10px;">
-          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="background: ${cardBackgroundColor}; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); height: 350px; table-layout: fixed;">
-            <tr>
-              <td align="center" style="background: ${imageBackgroundColor}; border-radius: 8px 8px 0 0; padding: 12px;">
-                <img src="${image}" alt="${title}" width="120" height="122" style="display: block; border-radius: 6px; object-fit: contain; background-color: #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.08);" />
-                <div style="position: relative; margin-top: -40px; text-align: right; padding-right: 8px;">
-                  <span style="background: ${discountColor}; color: #fff; font-size: 14px; font-weight: bold; padding: 4px 8px; border-radius: 4px; display: inline-block;">
-                    ${percentageOff}% OFF
-                  </span>
-                </div>
-              </td>
-            </tr>
-            <tr>
-              <td align="center" style="padding: 10px 15px 5px 15px; height: 80px; vertical-align: top;">
-                <p style="${pStyle} font-size: 16px; color: #232F3E; margin: 0; line-height: 1.3; font-weight: 600;">
-                  ${displayTitle}
-                </p>
-              </td>
-            </tr>
-            <tr>
-              <td align="center" style="padding: 0 15px 15px 15px; vertical-align: bottom;">
-                <a href="${link}" target="_blank" 
-                   style="${aStyle} display: inline-block; font-size: 14px; font-weight: 700; color: ${finalButtonTextColor}; background-color: ${finalButtonBackground}; border: ${finalButtonBorder}; border-radius: 4px; padding: 12px 22px; text-decoration: none; letter-spacing: 0.03em;">
-                  ${buttonText}
-                </a>
-              </td>
-            </tr>
-          </table>
+        <td width="33.33%" style="padding: 10px; text-align: center;">
+          <div style="background: ${cardBackgroundColor}; padding: 12px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.1); position: relative;">
+            <div style="position: relative; background: ${imageBackgroundColor || 'transparent'}; border-radius: 4px;">
+              <img src="${image}" alt="${title}" class="datadyno-img" />
+              <div style="position: absolute; top: 8px; right: 8px; background: ${discountColor}; color: white; font-size: 14px; font-weight: bold; padding: 2px 6px; border-radius: 3px;">
+                ${percentageOff}% OFF
+              </div>
+            </div>
+            <p style="${pTitleSyle}; margin: 12px auto 8px; max-width: 180px; word-wrap: break-word;">
+              ${displayTitle}
+            </p>
+            <a href="${link}" style="${aStyle}; display: inline-block; padding: 4px 10px; border: ${finalButtonBorder}; background: ${finalButtonBackground}; color: ${finalButtonTextColor}; border-radius: 5px; text-decoration: none;">
+              ${buttonText}
+            </a>
+          </div>
         </td>
       `;
     }).join('');
 
     const columnCount = filteredProducts.slice(i, i + 3).length;
     const totalColumns = 3;
-    const emptyCellsCount = totalColumns - columnCount;
-    // To center items, add empty cells equally on both sides if needed
-    const emptyCells = '<td width="33.33%"></td>'.repeat(Math.floor(emptyCellsCount / 2));
+    const emptyCells = totalColumns - columnCount;
+    const emptyHtml = '<td width="33.33%"></td>'.repeat(Math.floor(emptyCells / 2));
 
-    rows.push(`<tr bgcolor="${rowBgColors[(i / 3) % 2]}">${emptyCells}${rowItems}${emptyCells}</tr>`);
+    rows.push(`<tr>${emptyHtml}${rowItems}${emptyHtml}</tr>`);
   }
 
   return `
-  <!DOCTYPE html>
-  <html lang="en" >
-  <head>
-    <meta charset="UTF-8" />
-    <title>Deals Email</title>
-  </head>
-  <body style="Margin:0;padding:0;background-color:${bodyBackgroundColor}; font-family: Arial, sans-serif;">
-    <table role="presentation" border="0" cellpadding="0" cellspacing="0" width="100%" style="background-color: #ffffff;">
-      <tr>
-        <td align="center" style="padding: 30px 10px; background-color: ${titleBackgroundColor};">
-          <h2 style="color: #ffffff; margin: 0; font-weight: 700; font-size: 24px; ${h2Style}">
-            ${titleLine1}
-          </h2>
+  <body style="Margin:0;padding:0;background-color:${bodyBackgroundColor};">
+    <style>
+      img.datadyno-img {
+        width: 119px !important;
+        height: 122px !important;
+        display: block !important;
+        margin: 0 auto !important;
+        object-fit: contain !important;
+        border-radius: 6px !important;
+        background-color: #fff !important;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08) !important;
+      }
+    </style>
+    <table role="presentation" width="90%" border="0" cellspacing="0" cellpadding="0" style="margin: auto;">
+      ${titleLine1 && `<tr>
+        <td align="center" style="padding: 20px 10px; background: ${titleBackgroundColor};">
+          <h4 style="${h4Style}">${titleLine1}</h4>
         </td>
-      </tr>
+      </tr>`}
       <tr>
         <td align="center" style="padding: 20px 0;">
-          <table role="presentation" width="90%" border="0" cellspacing="0" cellpadding="0" style="margin: auto;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
             ${rows.join('')}
           </table>
         </td>
       </tr>
       <tr>
-        <td align="center" style="padding: 30px 10px; font-size: 14px; color: #767676;">
-          Powered by
-          <a href="https://datadyno.co/user/deals" target="_blank" style="color: #FF9900; text-decoration: none; font-weight: 700;">
-            DataDyno
-          </a>
+        <td align="center" style="padding: 30px 10px;">
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin: auto;">
+            <tr>
+              <td style="vertical-align: middle; padding-right: 10px;">
+                <span style="font-size: 18px;">
+                  Powered by
+                </span>
+              </td>
+              <td style="vertical-align: middle;">
+                <a href="https://datadyno.co/user/deals" target="_blank" style="display: inline-block; text-decoration: none;">
+                  <img src="https://res.cloudinary.com/dh5pf5on1/image/upload/v1747049158/temp/hff1b0ossms0dvgofjkz.png" alt="Brand Logo" style="width: 130px; height: 35px; display: block; border: 0;" />
+                </a>
+              </td>
+            </tr>
+          </table>
         </td>
       </tr>
     </table>
   </body>
-  </html>
   `;
 };
 
