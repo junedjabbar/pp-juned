@@ -461,23 +461,22 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
         </td>
       </tr>
       <tr>
-        <td align="center" style="padding: 30px 10px;">
-          <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin: auto;">
-            <tr>
-              <td style="vertical-align: middle; padding-right: 10px;">
-                <span style="font-size: 18px;">
-                  Powered by
-                </span>
-              </td>
-              <td style="vertical-align: middle;">
-                <a href="https://datadyno.co/user/deals" target="_blank" style="display: inline-block; text-decoration: none;">
-                  <img src="https://res.cloudinary.com/dh5pf5on1/image/upload/v1747049158/temp/hff1b0ossms0dvgofjkz.png" alt="Brand Logo" style="width: 95px; height: 28px; display: block; border: 0;" />
-                </a>
-              </td>
-            </tr>
-          </table>
+  <td align="center" style="padding: 30px 10px;">
+    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin: auto;">
+      <tr>
+        <td style="vertical-align: middle; padding-right: 10px; font-size: 18px; white-space: nowrap;">
+          Powered by
+        </td>
+        <td style="vertical-align: middle; white-space: nowrap;">
+          <a href="https://datadyno.co/user/deals" target="_blank" style="display: inline-block; text-decoration: none;">
+            <img src="https://res.cloudinary.com/dh5pf5on1/image/upload/v1747049158/temp/hff1b0ossms0dvgofjkz.png" alt="Brand Logo" style="width: 130px; height: 28px; display: block; border: 0;" />
+          </a>
         </td>
       </tr>
+    </table>
+  </td>
+</tr>
+
     </table>
   </body>
   `;
