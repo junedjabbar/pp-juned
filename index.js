@@ -298,10 +298,10 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
   const {
     affiliateTag,
     titleLine1 = '',
-    titleBackgroundColor = '#131921', // Amazon blue
+    titleBackgroundColor = '#131921',
     buttonText = 'SHOP NOW',
     buttonStyle = 'solid',
-    buttonBackground = '#ff9900', // Amazon orange
+    buttonBackground = '#ff9900',
     buttonTextColor,
     cardBackgroundColor = '#ffffff',
     discountColor = 'red',
@@ -357,8 +357,8 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
       ? (buttonTextColor || buttonBackground)
       : (buttonTextColor || '#ffffff');
 
-  // truncate is used to limit raw length — keep for safety but CSS will do real truncation
-  const truncate = (text, fontSizePx = 14, containerWidthPx = 180, lines = 2) => {
+  // 🔧 Updated lines = 3
+  const truncate = (text, fontSizePx = 14, containerWidthPx = 180, lines = 3) => {
     const avgCharWidth = fontSizePx * 0.5;
     const maxChars = Math.floor((containerWidthPx / avgCharWidth) * lines);
     if (text.length <= maxChars) return text;
@@ -377,7 +377,7 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
       } = product;
 
       const link = affiliateTag ? url.replace('getpoln-20', affiliateTag) : url;
-      const displayTitle = truncate(title, 10, 120, 2);
+      const displayTitle = truncate(title, 10, 120, 3); // 🔧 Updated to 3 lines
 
       return `
         <td width="33.33%" style="padding: 10px; text-align: center; vertical-align: top;">
@@ -392,9 +392,9 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
               overflow: hidden; 
               text-overflow: ellipsis; 
               display: -webkit-box; 
-              -webkit-line-clamp: 2; 
+              -webkit-line-clamp: 3; /* 🔧 Changed from 2 to 3 */
               -webkit-box-orient: vertical; 
-              height: 42px; /* fixed height for 2 lines approx */
+              height: 63px; /* 🔧 Changed from 42px to 63px */
               line-height: 21px;
               word-wrap: break-word;
               flex-grow: 0;
@@ -434,7 +434,7 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
   }
 
   return `
-  <body style="Margin:0;padding:0;background-color:${bodyBackgroundColor};">
+  <div style="Margin:0;padding:0;background-color:${bodyBackgroundColor};">
     <style>
       img.datadyno-img {
         width: 119px !important;
@@ -461,24 +461,23 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
         </td>
       </tr>
       <tr>
-  <td align="center" style="padding: 30px 10px;">
-    <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin: auto;">
-      <tr>
-        <td style="vertical-align: middle; padding-right: 10px; font-size: 18px; white-space: nowrap;">
-          Powered by
-        </td>
-        <td style="vertical-align: middle; white-space: nowrap;">
-          <a href="https://datadyno.co/user/deals" target="_blank" style="display: inline-block; text-decoration: none;">
-            <img src="https://res.cloudinary.com/dh5pf5on1/image/upload/v1747049158/temp/hff1b0ossms0dvgofjkz.png" alt="Brand Logo" style="width: 100px; height: 28px; display: block; border: 0;" />
-          </a>
+        <td align="center" style="padding: 30px 10px;">
+          <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin: auto;">
+            <tr>
+              <td style="vertical-align: middle; padding-right: 10px; font-size: 18px; white-space: nowrap;">
+                Powered by
+              </td>
+              <td style="vertical-align: middle; white-space: nowrap;">
+                <a href="https://datadyno.co/user/deals" target="_blank" style="display: inline-block; text-decoration: none;">
+                  <img src="https://res.cloudinary.com/dh5pf5on1/image/upload/v1747049158/temp/hff1b0ossms0dvgofjkz.png" alt="Brand Logo" style="width: 100px; height: 28px; display: block; border: 0;" />
+                </a>
+              </td>
+            </tr>
+          </table>
         </td>
       </tr>
     </table>
-  </td>
-</tr>
-
-    </table>
-  </body>
+  </div>
   `;
 };
 
