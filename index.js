@@ -292,13 +292,13 @@ const getDealsHtml = (products, settings, tagStyles = {}) => {
           <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin: auto;">
             <tr>
               <td style="vertical-align: middle; padding-right: 10px;">
-                <span style="font-size: 16px;">
+                <span style="font-size: 14px;">
                   Powered by
                 </span>
               </td>
               <td style="vertical-align: middle;">
                 <a href="https://datadyno.co/user/deals" target="_blank" style="display: inline-block; text-decoration: none;">
-                  <img src="https://res.cloudinary.com/dh5pf5on1/image/upload/v1747049158/temp/hff1b0ossms0dvgofjkz.png" alt="Brand Logo" style="width: 110px; height: 30px; display: block; border: 0;" />
+                  <img src="https://res.cloudinary.com/dh5pf5on1/image/upload/v1747049158/temp/hff1b0ossms0dvgofjkz.png" alt="Brand Logo" style="width: 90px; height: 25px; display: block; border: 0;" />
                 </a>
               </td>
             </tr>
@@ -483,12 +483,12 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
         <td align="center" style="padding: 30px 10px;">
           <table role="presentation" cellpadding="0" cellspacing="0" border="0" style="margin: auto;">
             <tr>
-              <td style="vertical-align: middle; padding-right: 10px; font-size: 16px; white-space: nowrap;">
+              <td style="vertical-align: middle; padding-right: 10px; font-size: 14px; white-space: nowrap;">
                 Powered by
               </td>
               <td style="vertical-align: middle; white-space: nowrap;">
                 <a href="https://datadyno.co/user/deals" target="_blank" style="display: inline-block; text-decoration: none;">
-                  <img src="https://res.cloudinary.com/dh5pf5on1/image/upload/v1747049158/temp/hff1b0ossms0dvgofjkz.png" alt="Brand Logo" style="width: 110px; height: 30px; display: block; border: 0;" />
+                  <img src="https://res.cloudinary.com/dh5pf5on1/image/upload/v1747049158/temp/hff1b0ossms0dvgofjkz.png" alt="Brand Logo" style="width: 90px; height: 25px; display: block; border: 0;" />
                 </a>
               </td>
             </tr>
