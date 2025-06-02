@@ -15,6 +15,11 @@ const COGNITO_DOMAIN = 'auth.getpoln.com';  // Replace with your actual Cognito 
 const COGNITO_BASE_URI = `https://${COGNITO_DOMAIN}`;
 const REDIRECT_URI = 'https://app.kit.com/apps/install';  // Kit's redirect URI
 
+
+// KIT SETTINGS
+const KIT_CLIENT_ID = 'L8MkRYebdxJBwFbHePBqHGErFtlWuArXnzOpGcSn47g'
+const KIT_CLIENT_SECRET = 'lXgfjN1K7wROqZ2z_xCz2lUpzLl56hnXaBThokxmVss'
+
 function safeStringify(obj) {
   const seen = new Set()
   return JSON.stringify(obj, (key, value) => {
@@ -28,6 +33,14 @@ function safeStringify(obj) {
     return value
   }, 3)
 }
+
+/**
+ * BELOW ROUTES ARE FOR API OAUTH
+ */
+
+/**
+ * BELOW ROUTES ARE FOR PLUGIN OAUTH
+ */
 
 // Route to handle the OAuth authorization request
 app.get('/authorize', (req, res) => {
@@ -123,7 +136,6 @@ app.post('/refresh_token', async (req, res) => {
 
 const getDealsHtml = (products, settings, tagStyles = {}) => {
   const {
-    affiliateTag,
     titleLine1 = '',
     titleBackgroundColor = '#c2c2f7',
     buttonText = 'SHOP NOW',
@@ -134,6 +146,7 @@ const getDealsHtml = (products, settings, tagStyles = {}) => {
     discountColor = 'red',
     imageBackgroundColor = '',
     bodyBackgroundColor = '#ffffff',
+    creatorSettings
   } = settings;
 
   // Only extract font-family as inline style string, if it exists
@@ -203,6 +216,9 @@ const getDealsHtml = (products, settings, tagStyles = {}) => {
 
   const filteredProducts = products.slice(0, 9);
   const rows = [];
+
+  const affiliateTag = creatorSettings?.affiliateTagId || settings.affiliateTag
+
   for (let i = 0; i < filteredProducts.length; i += 3) {
     const rowItems = filteredProducts.slice(i, i + 3).map(product => {
 
