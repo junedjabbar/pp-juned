@@ -312,7 +312,6 @@ const getDealsHtml = (products, settings, tagStyles = {}) => {
 
 const getDealsHtml2 = (products, settings, tagStyles = {}) => {
   const {
-    affiliateTag,
     titleLine1 = '',
     titleBackgroundColor = '#131921',
     buttonText = 'SHOP NOW',
@@ -323,6 +322,7 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
     discountColor = 'red',
     imageBackgroundColor = '',
     bodyBackgroundColor = '#ffffff',
+    creatorSettings
   } = settings;
 
   const fontFamilyStyle = styleObj => {
@@ -383,6 +383,9 @@ const getDealsHtml2 = (products, settings, tagStyles = {}) => {
 
   const filteredProducts = products.slice(0, 9);
   const rows = [];
+
+  const affiliateTag = creatorSettings?.affiliateTagId || settings.affiliateTag
+
   for (let i = 0; i < filteredProducts.length; i += 3) {
     const rowItems = filteredProducts.slice(i, i + 3).map(product => {
       const {
