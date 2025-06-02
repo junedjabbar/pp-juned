@@ -594,7 +594,7 @@ app.post('/html', async (request, response) => {
     });
   }
 
-  const html = getDealsHtml(dealProducts, settings, styles);
+  const html = getDealsHtml2(dealProducts, settings, styles);
 
   return response.json({
     code: 200,
