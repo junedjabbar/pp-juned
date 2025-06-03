@@ -76,6 +76,6 @@ export default function appAuth(app) {
 
         logger.info('→ /app/oauth response:', response?.data);
 
-        res.redirect('https://app.kit.com/apps/1232/install');
+        res.redirect('https://app.kit.com/apps/1229/install');
     });
 }
