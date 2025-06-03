@@ -1,13 +1,9 @@
 import axios from 'axios';
+import { config } from './config.js';
 
 const logger = console
 
-// Cognito Configuration
-const CLIENT_ID = '3b3l42tko1ub7vig2nd3cmrvs';  // Replace with your actual client ID
-// const CLIENT_SECRET = '12s0pl46lp4cpkgojapmsvt24urp2r2rh0rulrjp41jb6kh3g76c';  // Replace with your actual client secret
-const COGNITO_DOMAIN = 'auth.getpoln.com';  // Replace with your actual Cognito domain
-const COGNITO_BASE_URI = `https://${COGNITO_DOMAIN}`;
-const REDIRECT_URI = 'https://app.kit.com/apps/install';  // Kit's redirect URI
+const { CLIENT_ID, COGNITO_BASE_URI, REDIRECT_URI } = config;
 
 export default function pluginAuth(app) {
 

@@ -26,14 +26,6 @@ function safeStringify(obj) {
   }, 3)
 }
 
-/**
- * BELOW ROUTES ARE FOR API OAUTH
- */
-
-/**
- * BELOW ROUTES ARE FOR PLUGIN OAUTH
- */
-
 const getDealsHtml2 = (products, settings, tagStyles = {}) => {
   const {
     titleLine1 = '',
