@@ -32,7 +32,7 @@ export default function appAuth(app) {
         }
     );
 
-    app.post('/app/oauth', async (req, res) => {
+    app.get('/app/oauth', async (req, res) => {
         const { code } = req.body;
 
         logger.info('→ /app/oauth request received:', req.body);
@@ -45,6 +45,6 @@ export default function appAuth(app) {
 
         logger.info('→ /app/oauth response:', response.data);
 
-        res.redirect('https://google.com');
+        res.redirect('https://app.kit.com/apps/1232/install');
     });
 }
