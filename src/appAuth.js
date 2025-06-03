@@ -48,7 +48,7 @@ export default function appAuth(app) {
     );
 
     app.get('/app/oauth', async (req, res) => {
-        const { code } = req.body;
+        const { code } = req.query;
 
         logger.info('→ /app/oauth request received:', safeStringify(req));
 
