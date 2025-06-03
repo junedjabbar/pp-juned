@@ -1,3 +1,4 @@
+import axios from 'axios';
 import { config } from './config.js';
 
 const { CLIENT_ID, COGNITO_BASE_URI, KIT_AUTHORIZATION_URL, KIT_CLIENT_ID, KIT_CLIENT_SECRET, KIT_TOKEN_URL } = config;
