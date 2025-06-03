@@ -1,6 +1,6 @@
 import { config } from './config.js';
 
-const { CLIENT_ID, COGNITO_BASE_URI, KIT_OAUTH_AUTHORIZATION_URL, KIT_OAUTH_CLIENT_ID, KIT_OAUTH_CLIENT_SECRET, KIT_OAUTH_TOKEN_URL } = config;
+const { CLIENT_ID, COGNITO_BASE_URI, KIT_AUTHORIZATION_URL, KIT_CLIENT_ID, KIT_CLIENT_SECRET, KIT_TOKEN_URL } = config;
 
 const logger = console
 
@@ -24,12 +24,9 @@ export default function appAuth(app) {
             logger.info('→ /app/redirect request received');
 
             const redirectUri = 'https://pp-juned.vercel.app/app/oauth';
+            const state = Math.random().toString(36).substring(2, 15)
 
-            const url = `${KIT_OAUTH_AUTHORIZATION_URL}?
-                client_id=${KIT_OAUTH_CLIENT_ID}&
-                redirect_uri=${redirectUri}&
-                response_type=code&state=${Math.random().toString(36).substring(2, 15)}
-            `.toString();
+            const url = `${KIT_AUTHORIZATION_URL}?client_id=${KIT_CLIENT_ID}&redirect_uri=${redirectUri}&response_type=code&state=${state}`
 
             res.redirect(url);
         }
@@ -40,13 +37,9 @@ export default function appAuth(app) {
 
         logger.info('→ /app/oauth request received:', req.body);
 
-        const url = `${KIT_OAUTH_TOKEN_URL}?
-        client_id=${KIT_OAUTH_CLIENT_ID}&
-        client_secret=${KIT_OAUTH_CLIENT_SECRET}&
-        grant_type=authorization_code&
-        code=${code}&
-        redirect_uri=https://pp-juned.vercel.app/app/oauth
-    `.toString();
+        const redirectUri = 'https://pp-juned.vercel.app/app/oauth'
+
+        const url = `${KIT_TOKEN_URL}?client_id=${KIT_CLIENT_ID}&client_secret=${KIT_CLIENT_SECRET}&grant_type=authorization_code&code=${code}&redirect_uri=${redirectUri}`
 
         const response = await axios.post(url);
 
