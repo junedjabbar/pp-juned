@@ -5,6 +5,20 @@ const { CLIENT_ID, COGNITO_BASE_URI, KIT_AUTHORIZATION_URL, KIT_CLIENT_ID, KIT_C
 
 const logger = console
 
+function safeStringify(obj) {
+    const seen = new Set()
+    return JSON.stringify(obj, (key, value) => {
+      if (typeof value === 'object' && value !== null) {
+        if (seen.has(value)) {
+          return '[Circular]'
+        }
+        seen.add(value)
+      }
+  
+      return value
+    }, 3)
+  }
+
 export default function appAuth(app) {
     app.get('/app/authorize', (req, res) => {
         const { state, redirect_uri } = req.query;
@@ -36,7 +50,7 @@ export default function appAuth(app) {
     app.get('/app/oauth', async (req, res) => {
         const { code } = req.body;
 
-        logger.info('→ /app/oauth request received:', req.body);
+        logger.info('→ /app/oauth request received:', safeStringify(req));
 
         const redirectUri = 'https://pp-juned.vercel.app/app/oauth'
 
