@@ -40,11 +40,27 @@ export default function appAuth(app) {
 
         const redirectUri = 'https://pp-juned.vercel.app/app/oauth'
 
-        const url = `${KIT_TOKEN_URL}?client_id=${KIT_CLIENT_ID}&client_secret=${KIT_CLIENT_SECRET}&grant_type=authorization_code&code=${code}&redirect_uri=${redirectUri}`
+        const data = {
+            client_id: KIT_CLIENT_ID,
+            client_secret: KIT_CLIENT_SECRET,
+            grant_type: 'authorization_code',
+            code: code,
+            redirect_uri: redirectUri
+        };
 
-        const response = await axios.post(url);
+        let response
+        try {
+            response = await axios.post(KIT_TOKEN_URL, data, {
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                }
+            });
+        } catch (error) {
+            logger.error('Token request failed:', error.response?.data || error.message);
+        }
 
-        logger.info('→ /app/oauth response:', response.data);
+        logger.info('→ /app/oauth response:', response?.data);
 
         res.redirect('https://app.kit.com/apps/1232/install');
     });
