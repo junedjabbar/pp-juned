@@ -1,22 +1,24 @@
 import crypto from 'crypto';
 
-const passphrase = 'Funrun21@';
 const ivBase64 = 'c9QCX0vq6XHVlnOIsft8Z2G6TXIXKZaEgYa/ft/mqh8=';
-const iv = Buffer.from(ivBase64, 'base64');
 
-// Derive 256-bit key from passphrase using SHA-256
-const key = crypto.createHash('sha256').update(passphrase).digest();
-
-export function encryptState(data) {
-  const cipher = crypto.createCipheriv('aes-256-cbc', key, iv);
-  let encrypted = cipher.update(JSON.stringify(data), 'utf8', 'base64');
-  encrypted += cipher.final('base64');
-  return encrypted;
+export const encryptState = (input) => {
+    const iv = crypto.randomBytes(16)
+    const cipher = crypto.createCipheriv('aes-256-gcm', Buffer.from(ivBase64, 'base64'), iv)
+    let encrypted = cipher.update(input, 'utf8', 'base64')
+    encrypted += cipher.final('base64')
+    return {
+        ciphertext: encrypted,
+        iv: iv.toString('base64'),
+        authTag: cipher.getAuthTag().toString('base64')
+    }
 }
 
-export function decryptState(encryptedData) {
-  const decipher = crypto.createDecipheriv('aes-256-cbc', key, iv);
-  let decrypted = decipher.update(encryptedData, 'base64', 'utf8');
-  decrypted += decipher.final('utf8');
-  return JSON.parse(decrypted);
+export const decryptState = (data) => {
+    const { ciphertext, iv, authTag } = JSON.parse(Buffer.from(data, 'base64').toString('utf8'));
+    const decipher = crypto.createDecipheriv('aes-256-gcm', Buffer.from(ivBase64, 'base64'), Buffer.from(iv, 'base64'))
+    decipher.setAuthTag(Buffer.from(authTag, 'base64'))
+    let decrypted = decipher.update(ciphertext, 'base64', 'utf8')
+    decrypted += decipher.final('utf8')
+    return decrypted
 }
