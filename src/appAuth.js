@@ -21,12 +21,31 @@ export default function appAuth(app) {
     });
 
     app.get(
-        "/app/redirect", (req, res) => {
+        "/app/redirect", async (req, res) => {
             const { code } = req.query;
             logger.info('→ /app/redirect request received');
 
             // TODO: Get this user's information from cognito and send it to poln
-            
+            const data = {
+                client_id: CLIENT_ID,
+                grant_type: 'authorization_code',
+                code: code,
+                redirect_uri: APP_REDIRECT_URI
+            };
+
+            let response
+            try {
+                response = await axios.post(
+                    `${COGNITO_BASE_URI}/oauth2/token`,
+                    data,
+                    { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
+                );
+            } catch (error) {
+                logger.error('Token request failed:', error.response?.data || error.message);
+            }
+
+            logger.info('→ cognito/token response:', response?.data);
+
             const state = Math.random().toString(36).substring(2, 15)
 
             const url = `${KIT_AUTHORIZATION_URL}?client_id=${KIT_CLIENT_ID}&redirect_uri=${APP_OAUTH_URI}&response_type=code&state=${state}`
