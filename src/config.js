@@ -9,5 +9,6 @@ export const config = {
     KIT_CLIENT_SECRET: "TCT85ihc0QESitWGFTHsAhAWcxqKuOuvQ1XzuiWsmKo",
     KIT_AUTHORIZATION_URL: `https://app.kit.com/oauth/authorize`,
     KIT_TOKEN_URL: `https://app.kit.com/oauth/token`,
-    KIT_CALLBACK_URL: `https://app.kit.com/oauth/kit/callback`
+    KIT_CALLBACK_URL: `https://app.kit.com/oauth/kit/callback`,
+    KIT_REDIRECT_URI: 'https://pp-juned.vercel.app/app/redirect',
 }

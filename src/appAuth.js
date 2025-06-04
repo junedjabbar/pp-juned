@@ -2,18 +2,18 @@ import axios from 'axios';
 import { config } from './config.js';
 import { safeStringify } from './utils.js';
 
-const { CLIENT_ID, COGNITO_BASE_URI, KIT_AUTHORIZATION_URL, KIT_CLIENT_ID, KIT_CLIENT_SECRET, KIT_TOKEN_URL } = config;
+const { CLIENT_ID, COGNITO_BASE_URI, KIT_AUTHORIZATION_URL, KIT_CLIENT_ID, KIT_CLIENT_SECRET, KIT_TOKEN_URL, KIT_REDIRECT_URI } = config;
 
 const logger = console
 
-const APP_REDIRECT_URI = 'https://pp-juned.vercel.app/app/redirect';
-
 export default function appAuth(app) {
     app.get('/app/authorize', (req, res) => {
+        const { state, redirect } = req.query;
+
         logger.info(`→ /app/authorize request received:`, req.query);
 
         // Build the Cognito authorization URL
-        const authUrl = `${COGNITO_BASE_URI}/oauth2/authorize?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${APP_REDIRECT_URI}`;
+        const authUrl = `${COGNITO_BASE_URI}/oauth2/authorize?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${KIT_REDIRECT_URI}&kitRedirectUri=${redirect}`;
 
         // Redirect to Cognito's OAuth authorization endpoint
         res.redirect(authUrl);
@@ -21,13 +21,10 @@ export default function appAuth(app) {
 
     app.get(
         "/app/redirect", (req, res) => {
+            const { state, kitRedirectUri } = req.query;
             logger.info('→ /app/redirect request received', req.query);
-            const redirectUri = 'https://pp-juned.vercel.app/app/oauth';
-            const state = Math.random().toString(36).substring(2, 15)
 
-            // TODO: Get this user's information from cognito and send it to poln
-
-            const url = `${KIT_AUTHORIZATION_URL}?client_id=${KIT_CLIENT_ID}&redirect_uri=${redirectUri}&response_type=code&state=${state}`;
+            const url = `${KIT_AUTHORIZATION_URL}?client_id=${KIT_CLIENT_ID}&redirect_uri=${KIT_REDIRECT_URI}&response_type=code&state=${state}&kitRedirectUri=${kitRedirectUri}`
 
             res.redirect(url);
         }
@@ -43,7 +40,7 @@ export default function appAuth(app) {
             client_secret: KIT_CLIENT_SECRET,
             grant_type: 'authorization_code',
             code: code,
-            redirect_uri: APP_REDIRECT_URI
+            redirect_uri: KIT_REDIRECT_URI
         };
 
         let response
