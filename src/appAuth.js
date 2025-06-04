@@ -3,7 +3,7 @@ import { config } from './config.js';
 import { safeStringify } from './utils.js';
 import { encryptState, decryptState } from './crypto.js';
 
-const { CLIENT_ID, COGNITO_BASE_URI, KIT_AUTHORIZATION_URL, KIT_CLIENT_ID, KIT_CLIENT_SECRET, KIT_TOKEN_URL } = config;
+const { CLIENT_ID, COGNITO_BASE_URI, KIT_AUTHORIZATION_URL, KIT_CLIENT_ID, KIT_CLIENT_SECRET, KIT_TOKEN_URL, KIT_USERINFO_URL } = config;
 
 const logger = console
 
@@ -77,13 +77,7 @@ export default function appAuth(app) {
         logger.info('→ /app/oauth request received:', safeStringify(req));
 
         // Then, decrypt when Kit redirects back
-        try {
-            const stateData = decryptState(state);
-
-            logger.info('→ /app/oauth state data:', stateData);
-        } catch (e) {
-            logger.error('Exception in decrypting state:', e.message);
-        }
+        const stateData = decryptState(state);
 
         const data = {
             client_id: KIT_CLIENT_ID,
@@ -101,6 +95,17 @@ export default function appAuth(app) {
                     'Accept': 'application/json'
                 }
             });
+
+            const kitUserResp = await axios.get(KIT_USERINFO_URL, {
+                headers: { Authorization: `Bearer ${response.data.access_token}` },
+            });
+
+            const kitUserId = kitUserResp.user?.email
+            const kitPrimaryEmail = kitUserResp.account?.primary_email
+
+            logger.info('→ /app/oauth kitUserId:', JSON.stringify(kitUserResp));
+            logger.info('→ /app/oauth kitUserId:', JSON.stringify({kitUserId, kitPrimaryEmail}));
+
         } catch (error) {
             logger.error('Token request failed:', error.response?.data || error.message);
         }
