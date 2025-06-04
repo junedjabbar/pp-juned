@@ -11,31 +11,36 @@ const APP_REDIRECT_URI = `https://pp-juned.vercel.app/app/redirect`;
 const APP_OAUTH_URI = `https://pp-juned.vercel.app/app/oauth`;
 
 async function getPolnUserId(code) {
-    const data = {
-        client_id: CLIENT_ID,
-        grant_type: 'authorization_code',
-        code: code,
-        redirect_uri: APP_REDIRECT_URI
-    };
+    try {
+        const data = {
+            client_id: CLIENT_ID,
+            grant_type: 'authorization_code',
+            code: code,
+            redirect_uri: APP_REDIRECT_URI
+        };
 
-    const response = await axios.post(
-        `${COGNITO_BASE_URI}/oauth2/token`,
-        data,
-        { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
-    );
+        const response = await axios.post(
+            `${COGNITO_BASE_URI}/oauth2/token`,
+            data,
+            { headers: { 'Content-Type': 'application/x-www-form-urlencoded' } }
+        );
 
-    logger.info('→ cognito/token response:', response?.data);
+        logger.info('→ cognito/token response:', response?.data);
 
-    const accessToken = response.data.access_token;
+        const accessToken = response.data.access_token;
 
-    // Get Poln user info
-    const userInfoResp = await axios.get(`${COGNITO_BASE_URI}/oauth2/userInfo`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-    });
+        // Get Poln user info
+        const userInfoResp = await axios.get(`${COGNITO_BASE_URI}/oauth2/userInfo`, {
+            headers: { Authorization: `Bearer ${accessToken}` },
+        });
 
-    const polnUserId = userInfoResp.data.sub; // Or userInfoResp.data.email 
+        const polnUserId = userInfoResp.data.sub; // Or userInfoResp.data.email 
 
-    return polnUserId;
+        return polnUserId;
+    } catch (error) {
+        logger.error('Exception in getPolnUserId:', error.response?.data || error.message);
+    }
+    return null;
 }
 
 export default function appAuth(app) {
@@ -53,21 +58,15 @@ export default function appAuth(app) {
         "/app/redirect", async (req, res) => {
             const { code } = req.query;
             logger.info('→ /app/redirect request received');
+            const polnUserId = await getPolnUserId(code);
 
-            try {
-                const polnUserId = await getPolnUserId(code);
+            // Encrypt before redirecting to Kit
+            const state = polnUserId ? encryptState({ polnUserId, timestamp: Date.now() }) : Math.random().toString(36).substring(2, 15);
 
-                // Encrypt before redirecting to Kit
-                const state = encryptState({ polnUserId, timestamp: Date.now() });
+            // Redirect to Kit OAuth
+            const url = `${KIT_AUTHORIZATION_URL}?client_id=${KIT_CLIENT_ID}&redirect_uri=${APP_OAUTH_URI}&response_type=code&state=${encodeURIComponent(state)}`;
 
-                // Redirect to Kit OAuth
-                const url = `${KIT_AUTHORIZATION_URL}?client_id=${KIT_CLIENT_ID}&redirect_uri=${APP_OAUTH_URI}&response_type=code&state=${encodeURIComponent(state)}`;
-
-                res.redirect(url);
-            } catch (error) {
-                logger.error('Exception in /app/redirect:', error.response?.data || error.message);
-                res.status(500).send('OAuth error');
-            }
+            res.redirect(url);
         }
     );
 
