@@ -61,8 +61,8 @@ export default function appAuth(app) {
             const polnUserId = await getPolnUserId(code);
 
             // Encrypt before redirecting to Kit
-            const cypherRes = polnUserId ? encryptState(JSON.stringify({ polnUserId, timestamp: Date.now() })) : Math.random().toString(36).substring(2, 15);
-            const state = cypherRes.ciphertext;
+            const cypherRes = encryptState(JSON.stringify({ polnUserId, timestamp: Date.now() }))
+            const state = Buffer.from(JSON.stringify(cypherRes)).toString('base64');
 
             // Redirect to Kit OAuth
             const url = `${KIT_AUTHORIZATION_URL}?client_id=${KIT_CLIENT_ID}&redirect_uri=${APP_OAUTH_URI}&response_type=code&state=${encodeURIComponent(state)}`;
