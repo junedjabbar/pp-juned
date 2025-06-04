@@ -10,5 +10,4 @@ export const config = {
     KIT_AUTHORIZATION_URL: `https://app.kit.com/oauth/authorize`,
     KIT_TOKEN_URL: `https://app.kit.com/oauth/token`,
     KIT_CALLBACK_URL: `https://app.kit.com/oauth/kit/callback`,
-    KIT_REDIRECT_URI: 'https://pp-juned.vercel.app/app/redirect',
 }

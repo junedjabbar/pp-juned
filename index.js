@@ -1,7 +1,6 @@
 import express from "express";
 import pluginAuth from "./src/pluginAuth.js";
 import appAuth from "./src/appAuth.js";
-import { safeStringify } from "./src/utils.js";
 
 const app = express()
 const port = 3001
@@ -12,6 +11,20 @@ const logger = console
 
 pluginAuth(app)
 appAuth(app)
+
+function safeStringify(obj) {
+  const seen = new Set()
+  return JSON.stringify(obj, (key, value) => {
+    if (typeof value === 'object' && value !== null) {
+      if (seen.has(value)) {
+        return '[Circular]'
+      }
+      seen.add(value)
+    }
+
+    return value
+  }, 3)
+}
 
 const getDealsHtml2 = (products, settings, tagStyles = {}) => {
   const {
