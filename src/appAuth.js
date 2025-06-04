@@ -22,8 +22,11 @@ export default function appAuth(app) {
 
     app.get(
         "/app/redirect", (req, res) => {
+            const { code } = req.query;
             logger.info('→ /app/redirect request received');
 
+            // TODO: Get this user's information from cognito and send it to poln
+            
             const state = Math.random().toString(36).substring(2, 15)
 
             const url = `${KIT_AUTHORIZATION_URL}?client_id=${KIT_CLIENT_ID}&redirect_uri=${APP_OAUTH_URI}&response_type=code&state=${state}`
