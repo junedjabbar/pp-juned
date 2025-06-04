@@ -76,9 +76,9 @@ export default function appAuth(app) {
         logger.info('→ /app/oauth request received:', safeStringify(req));
 
         // Then, decrypt when Kit redirects back
-        const stateData = JSON.parse(decryptState(state));
+        // const stateData = decryptState(state);
 
-        logger.info('→ /app/oauth state data:', safeStringify(stateData));
+        // logger.info('→ /app/oauth state data:', stateData);
 
         const data = {
             client_id: KIT_CLIENT_ID,
