@@ -8,12 +8,12 @@ const logger = console
 
 export default function appAuth(app) {
     app.get('/app/authorize', (req, res) => {
-        const { state, redirect_uri } = req.query;
+        const { state, redirect } = req.query;
 
         logger.info(`→ /app/authorize request received:`, req.query);
 
         // Build the Cognito authorization URL
-        const authUrl = `${COGNITO_BASE_URI}/oauth2/authorize?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${KIT_REDIRECT_URI}&state=${state}&kitRedirectUri=${redirect_uri}`;
+        const authUrl = `${COGNITO_BASE_URI}/oauth2/authorize?response_type=code&client_id=${CLIENT_ID}&redirect_uri=${KIT_REDIRECT_URI}&kitRedirectUri=${redirect}`;
 
         // Redirect to Cognito's OAuth authorization endpoint
         res.redirect(authUrl);
