@@ -61,7 +61,7 @@ export default function appAuth(app) {
             const polnUserId = await getPolnUserId(code);
 
             // Encrypt before redirecting to Kit
-            const state = polnUserId ? encryptState({ polnUserId, timestamp: Date.now() }) : Math.random().toString(36).substring(2, 15);
+            const state = polnUserId ? encryptState(JSON.stringify({ polnUserId, timestamp: Date.now() })) : Math.random().toString(36).substring(2, 15);
 
             // Redirect to Kit OAuth
             const url = `${KIT_AUTHORIZATION_URL}?client_id=${KIT_CLIENT_ID}&redirect_uri=${APP_OAUTH_URI}&response_type=code&state=${encodeURIComponent(state)}`;
@@ -76,7 +76,7 @@ export default function appAuth(app) {
         logger.info('→ /app/oauth request received:', safeStringify(req));
 
         // Then, decrypt when Kit redirects back
-        const stateData = decryptState(state);
+        const stateData = JSON.parse(decryptState(state));
 
         logger.info('→ /app/oauth state data:', safeStringify(stateData));
 
