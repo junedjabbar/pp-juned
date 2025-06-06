@@ -106,8 +106,8 @@ export default function appAuth(app) {
             const kitUserId = kitUserResp.user?.email
             const kitPrimaryEmail = kitUserResp.account?.primary_email
 
-            logger.info('→ /app/oauth kitUserId:', JSON.stringify(kitUserResp));
-            logger.info('→ /app/oauth kitUserId:', JSON.stringify({ kitUserId, kitPrimaryEmail }));
+            logger.info('→ /app/oauth kitUserId:', safeStringify(kitUserResp));
+            logger.info('→ /app/oauth kitUserId:', safeStringify({ kitUserId, kitPrimaryEmail }));
 
         } catch (error) {
             logger.error('Token request failed:', error.response?.data || error.message);
