@@ -103,8 +103,8 @@ export default function appAuth(app) {
                 headers: { Authorization: `Bearer ${response.data.access_token}` },
             });
 
-            const kitUserId = kitUserResp.user?.email
-            const kitPrimaryEmail = kitUserResp.account?.primary_email
+            const kitUserId = kitUserResp.data.user?.email
+            const kitPrimaryEmail = kitUserResp.data.account?.primary_email
 
             logger.info('→ /app/oauth kitUserId:', safeStringify(kitUserResp));
             logger.info('→ /app/oauth kitUserId:', safeStringify({ kitUserId, kitPrimaryEmail }));
