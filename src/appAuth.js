@@ -71,6 +71,14 @@ export default function appAuth(app) {
         }
     );
 
+    app.post('/app/revoke', async (req, res) => {
+        const { client_id, client_secret, token } = req.body;
+
+        logger.info('→ /app/revoke request received:', safeStringify(req));
+
+        res.status(200).send('Revoke request successful');
+    });
+
     app.get('/app/oauth', async (req, res) => {
         const { code, state } = req.query;
 
