@@ -76,9 +76,6 @@ export default function appAuth(app) {
 
         logger.info('→ /app/oauth request received:', safeStringify(req));
 
-        // Then, decrypt when Kit redirects back
-        const stateData = decryptState(state);
-
         const data = {
             client_id: KIT_CLIENT_ID,
             client_secret: KIT_CLIENT_SECRET,
@@ -89,6 +86,12 @@ export default function appAuth(app) {
 
         let response
         try {
+
+            // Then, decrypt when Kit redirects back
+            const stateData = JSON.parse(decryptState(state));
+
+            logger.info('→ /app/oauth stateData:', safeStringify(stateData));
+
             response = await axios.post(KIT_TOKEN_URL, data, {
                 headers: {
                     'Content-Type': 'application/json',
@@ -104,7 +107,7 @@ export default function appAuth(app) {
             const kitPrimaryEmail = kitUserResp.account?.primary_email
 
             logger.info('→ /app/oauth kitUserId:', JSON.stringify(kitUserResp));
-            logger.info('→ /app/oauth kitUserId:', JSON.stringify({kitUserId, kitPrimaryEmail}));
+            logger.info('→ /app/oauth kitUserId:', JSON.stringify({ kitUserId, kitPrimaryEmail }));
 
         } catch (error) {
             logger.error('Token request failed:', error.response?.data || error.message);
