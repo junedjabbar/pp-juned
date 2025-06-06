@@ -71,7 +71,7 @@ export default function appAuth(app) {
         }
     );
 
-    app.post('/app/revoke', async (req, res) => {
+    app.post('/revoke', async (req, res) => {
         const { client_id, client_secret, token } = req.body;
 
         logger.info('→ /app/revoke request received:', safeStringify(req));
